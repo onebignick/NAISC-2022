@@ -14,7 +14,10 @@ export default function Desktop () {
         <div className="desktop">
             <Sidebar enabled={isSidebarEnabled} />
             <div className="container">
-                <Navbar setIsSidebarEnabled={(newActive) => setIsSidebarEnabled(newActive)}/>
+                <Navbar 
+                    setIsSidebarEnabled={(newActive) => setIsSidebarEnabled(newActive)}
+                    enabled={isSidebarEnabled}
+                />
             </div>
         </div>
     );
