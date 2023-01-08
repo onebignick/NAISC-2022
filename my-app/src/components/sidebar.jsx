@@ -3,8 +3,11 @@ import './styles/sidebar.scss';
 
 export default function Sidebar () {
     return(
-        <div className="container">
-            <div id="app-name">App Name</div>
+        <div className="sidebar-container">
+            <div id="app-name" className='sidebar-button'>App Name</div>
+            <div id="sidebar-links">
+                <div className='sidebar-button'>Dashboard</div>
+            </div>
         </div>
     )
 }

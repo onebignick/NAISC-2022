@@ -1,0 +1,16 @@
+.navbar-container {
+    display: flex;
+    height: 50px;
+    width: 100%;
+    background-color: green;
+}
+
+#search-bar-form {
+    height:100%;
+}
+#search-bar {
+    align-items: center;
+    border-radius: 8px;
+    height: 80%;
+    width: 40%;
+}
