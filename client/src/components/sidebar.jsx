@@ -7,7 +7,7 @@ export default function Sidebar (props) {
     } else {
     return( 
         <div className="sidebar-container">
-            <div id="app-name" className='sidebar-button'>App Name</div>
+            <div id="app-name" className='sidebar-button'>&#128240;news.ai</div>
             <div id="sidebar-links">
                 <div className='sidebar-button'>Dashboard</div>
             </div>
