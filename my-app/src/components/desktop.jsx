@@ -18,6 +18,9 @@ export default function Desktop () {
                     setIsSidebarEnabled={(newActive) => setIsSidebarEnabled(newActive)}
                     enabled={isSidebarEnabled}
                 />
+                <div id="test">
+                    Hello world!
+                </div>
             </div>
         </div>
     );
