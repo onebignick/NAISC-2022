@@ -7,6 +7,10 @@ from sgnlp.models.sentic_gcn import (
     SenticGCNBertConfig,
     SenticGCNBertPostprocessor,
 )
+from flask import Flask,jsonify
+from textblob import TextBlob
+
+app = Flask(__name__)
 
 # Create tokenizer
 tokenizer = SenticGCNBertTokenizer.from_pretrained("bert-base-uncased")
@@ -50,10 +54,29 @@ inputs = [
         "sentence": "the only chicken i moderately enjoyed was their grilled chicken special with edamame puree .",
     },
 ]
-txt = "whatever input we have"
+
+@app.route('/api')
+def data():
+    # here we want to get the value of user (i.e. ?user=some-value)
+    headline = request.args.get('str')
+    blob = TextBlob(headline)
+    aspects = blob.noun_phrases
+    inputs = [{"aspects":aspects, "sentence": txt}]
+
+# processing
+    processed_inputs, processed_indices = preprocessor(inputs)
+    outputs = model(processed_indices)
+
+# Postprocessing
+    post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
+
+    return jsonify(post_outputs)
+
+txt = "Everything is always cooked to perfection , the service is excellent, the decor cool and understated."
 blob = TextBlob(txt)
-aspects = blob.noun_phrases
-inputs = [{"aspects":aspects, "sentence": txt}]
+aspects = [i for i in blob.noun_phrases]
+print(aspects)
+inputs = [{"aspects":aspects, "sentence": txt},{"aspects":aspects, "sentence": txt}]
 
 # processing
 processed_inputs, processed_indices = preprocessor(inputs)
@@ -63,3 +86,5 @@ outputs = model(processed_indices)
 post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
 
 print(post_outputs)
+
+app.run(host="0.0.0.0", port=5000)
