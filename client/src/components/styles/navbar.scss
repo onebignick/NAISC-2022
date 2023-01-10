@@ -1,0 +1,35 @@
+.navbar-container {
+    display: flex;
+    height: 50px;
+    width: 100%;
+    padding-bottom: 2px;
+    background-color: #3A3B3C;
+    border-bottom: 10px solid #121212;
+}
+
+#search-bar-form {
+    height:100%;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#search-bar {
+    border-radius: 24px;
+    height: 60%;
+    width: 90%;
+    border-style: solid;
+    border-color: #E5E7EB;
+}
+
+#search-icon {
+    width: 2em;
+    fill: white;
+}
+
+#menu-icon {
+    height: 2em;
+    width: 4em;
+}
