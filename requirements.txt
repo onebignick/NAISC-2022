@@ -1,2 +1,4 @@
 sgnlp
 textblob
+flask
+flask_cors
