@@ -72,19 +72,19 @@ def data():
 
     return jsonify(post_outputs)
 
-txt = "Everything is always cooked to perfection , the service is excellent, the decor cool and understated."
-blob = TextBlob(txt)
+txt = "Boy dies in traffic accident"
+blob = TextBlob("Boy dies in traffic accident")
 aspects = [i for i in blob.noun_phrases]
 print(aspects)
-inputs = [{"aspects":aspects, "sentence": txt},{"aspects":aspects, "sentence": txt}]
-
+inputs = [{"aspects":aspects, "sentence": txt,},{"aspects":aspects, "sentence": txt,}]
+print(inputs)
 # processing
 processed_inputs, processed_indices = preprocessor(inputs)
 outputs = model(processed_indices)
 
 # Postprocessing
 post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
-
+post_outputs['aspects'] 
 print(post_outputs)
 
 app.run(host="0.0.0.0", port=5000)
