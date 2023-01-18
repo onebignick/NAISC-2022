@@ -14,7 +14,7 @@ export default function Navbar ({setIsSidebarEnabled, enabled}) {
                     }
                 } />
                 <div className="search-bar-com">
-                    <input type="text" id="search-bar" />
+                    <input type="text" id="search-bar" placeholder="News article" />
                     <img id="search-icon" src={SearchIcon} alt="#" />
                 </div>
             </form>

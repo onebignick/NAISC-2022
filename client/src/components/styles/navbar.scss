@@ -1,11 +1,12 @@
 .navbar-container {
     display: flex;
-    height: 50px;
+    // height: 50px;
+    padding: 0.6rem 0;
     width: 100%;
-    padding-bottom: 2px;
+    //padding-bottom: 2px;
     background-color: #3A3B3C;
-    border-bottom: 10px solid #121212;
-    // border-bottom: 10px solid #0C9463;
+    // border-bottom: 10px solid #121212;
+    border-bottom: 5px solid #0C9463;
 }
 
 #search-bar-form {
@@ -47,4 +48,8 @@
     align-items: center;
     gap: 1rem;
     width: 30%;
+}
+
+.search-bar-com input {
+    padding: 0.2rem;
 }
