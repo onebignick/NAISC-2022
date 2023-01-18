@@ -15,7 +15,7 @@ export default function Desktop () {
     function getData() {
         axios({
           method: "GET",
-          url:"http://localhost:5000/data",
+          url:"http://localhost:8000/data",
         })
         .then((response) => {
           const res = response.data
@@ -42,7 +42,9 @@ export default function Desktop () {
     return (
         <div className="desktop">
             <Sidebar enabled={isSidebarEnabled} />
-            <div className="container">
+            <div className="container" onClick={() => {
+                if (isSidebarEnabled) setIsSidebarEnabled(false)
+            }}>
                 <Navbar 
                     setIsSidebarEnabled={(newActive) => setIsSidebarEnabled(newActive)}
                     enabled={isSidebarEnabled}
