@@ -15,7 +15,7 @@ export default function Desktop () {
     function getData() {
         axios({
           method: "GET",
-          url:"http://localhost:5000/data",
+          url:"http://localhost:8000/data",
         })
         .then((response) => {
           const res = response.data

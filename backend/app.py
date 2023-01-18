@@ -7,7 +7,7 @@ from sgnlp.models.sentic_gcn import (
     SenticGCNBertConfig,
     SenticGCNBertPostprocessor,
 )
-from flask import Flask,jsonify
+from flask import Flask,jsonify,request
 from textblob import TextBlob
 from flask import Flask
 from flask_cors import CORS
@@ -60,7 +60,7 @@ def index():
 
     blob = TextBlob(headline)
     headline_aspects = [i for i in blob.noun_phrases]
-    print(aspects)
+    #print(aspects)
     blob1 = TextBlob(article)
     article_aspects = [i for i in blob1.noun_phrases]
 
@@ -74,9 +74,10 @@ def index():
     post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
     score = sum(post_outputs['labels'])
 
+    response = jsonify({"overall" : score})
+    response.headers.add("Access-Control-Allow-Origin", "*")
 
-
-    return {"overall" : score}
+    return response
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8000, debug=True)
