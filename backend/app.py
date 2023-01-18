@@ -85,7 +85,7 @@ def index():
 def getnews():
     x = requests.get(URL)
     data = x.json()
-    
+    print(data)
     return jsonify(data['articles'][:50])
 
 if __name__ == '__main__':
