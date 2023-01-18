@@ -5,19 +5,19 @@ cur = conn.cursor()
 
 cur.execute('''
     CREATE TABLE IF NOT EXISTS Authors(
-    author_id INTEGER PRIMARY KEY,
+    author_id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_name TEXT)
 ''')
 
 cur.execute('''
     CREATE TABLE IF NOT EXISTS Sources(
-        source_id INTEGER PRIMARY KEY,
+        source_id INTEGER PRIMARY KEY AUTOINCREMENT,
         source_name TEXT)
 ''')
 
 cur.execute('''
     CREATE TABLE IF NOT EXISTS Articles(
-        article_id INTEGER PRIMARY KEY,
+        article_id INTEGER PRIMARY KEY AUTOINCREMENT,
         article_title TEXT,
         article_description TEXT,
         article_url TEXT,

@@ -11,10 +11,8 @@ from flask import Flask,jsonify,request
 from textblob import TextBlob
 from flask import Flask
 from flask_cors import CORS
-
+import sqlite3
 import requests
-
-
 
 # Create tokenizer
 tokenizer = SenticGCNBertTokenizer.from_pretrained("bert-base-uncased")
@@ -85,7 +83,62 @@ def index():
 def getnews():
     x = requests.get(URL)
     data = x.json()
-    print(data)
+
+    # connect to database
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+    for i in range(len(data['articles'])):
+        print(data['articles'][i]['author'])
+        check_article = '''
+            SELECT article_title FROM Articles WHERE article_title="{}"
+        '''.format(data["articles"][i]['title'])
+        result = cur.execute(check_article)
+        if len(result.fetchall()) == 0:
+            check_source = '''
+                SELECT source_name FROM Sources WHERE source_name="{}"
+            '''.format(data['articles'][i]['source']['name'])
+            result = cur.execute(check_source)
+            if len(result.fetchall()) == 0:
+                cur.execute('''
+                    INSERT INTO Sources(source_name) VALUES (?)
+                ''', (data['articles'][i]['source']['name'],))
+                conn.commit()
+                result = cur.execute(check_source)
+
+            #source_id = result.fetchall()[0][0]
+            #print(source_id)
+
+            check_author = '''
+                SELECT author_name FROM Authors WHERE author_name="{}"
+            '''.format(data['articles'][i]['author'])
+            try:
+                result = cur.execute(check_author)
+            except:
+                data['articles'][i]['author'] = "Various Authors"
+                check_author = '''
+                SELECT author_name FROM Authors WHERE author_name="{}"
+            '''.format(data['articles'][i]['author'])
+                result = cur.execute(check_author)
+            
+            
+            if len(result.fetchall()) == 0:
+                cur.execute('''
+                    INSERT INTO Authors(author_name) VALUES (?)
+                ''', (data['articles'][i]['author'],))
+                conn.commit()           
+                result = cur.execute(check_author)
+
+            #author_id = result.fetchall()[0][0]
+            #print(author_id)
+
+            cur.execute('''
+                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content) 
+                VALUES  (?,?,?,?,?,?)
+            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'], data['articles'][i]['content']))
+
+            conn.commit()
+    conn.close()
+
     return jsonify(data['articles'][:50])
 
 if __name__ == '__main__':
