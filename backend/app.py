@@ -12,6 +12,8 @@ from textblob import TextBlob
 from flask import Flask
 from flask_cors import CORS
 
+import requests
+
 
 
 # Create tokenizer
