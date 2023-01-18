@@ -13,8 +13,10 @@ export default function Navbar ({setIsSidebarEnabled, enabled}) {
                         enabled ? setIsSidebarEnabled(false) : setIsSidebarEnabled(true)
                     }
                 } />
-                <input type="text" id="search-bar" />
-                <img id="search-icon" src={SearchIcon} alt="#" />
+                <div className="search-bar-com">
+                    <input type="text" id="search-bar" />
+                    <img id="search-icon" src={SearchIcon} alt="#" />
+                </div>
             </form>
         </div>
     )
