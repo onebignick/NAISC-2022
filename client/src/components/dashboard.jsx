@@ -47,3 +47,28 @@ const renderFunnelChart=(
         </Funnel>
     </FunnelChart>
 )
+
+
+// example of one element in the data Array
+// {
+//     "source": {"id": null,"name": "CNBC"},
+//     "author": "Diana Olick",
+//     "title": "Mortgage demand jumps nearly 28% in one week, as interest rates drop to lowest point in months - CNBC",
+//     "description": "Mortgage rates are at the lowest level since September, and that is bringing new demand into the mortgage market.",
+//     "url": "https://www.cnbc.com/2023/01/18/mortgage-demand-jumps-interest-rates-drop.html",
+//     "urlToImage": "https://image.cnbcfm.com/api/v1/image/107100450-1659971734911-gettyimages-1347125073-120_0821_125790.jpeg?v=1674043202&w=1920&h=1080",
+//     "publishedAt": "2023-01-18T12:00:02Z",
+//     "content": "Consumers returned from the holiday season to find mortgage rates at their lowest point since September, and they are responding in dramatic fashion.\r\nMortgage application volume jumped nearly 28% la… [+1472 chars]"
+//     },
+export default function Charts(props){
+    const {data}=props
+    //First do a line graph for latest 10 days for a certain news outlet
+    const fullCurrentDate= new Date()
+    let day = fullCurrentDate.getDate();
+    let month = fullCurrentDate.getMonth() + 1;
+    let year = fullCurrentDate.getFullYear();
+
+    // This arrangement can be altered based on how we want the date's format to appear.
+    let currentDate = `${day}-${month}-${year}`;
+    console.log(currentDate); // "17-6-2022"
+}
