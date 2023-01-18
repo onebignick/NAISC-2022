@@ -40,22 +40,22 @@ config = SenticGCNBertConfig.from_pretrained(
 model = SenticGCNBertModel.from_pretrained(
     "https://storage.googleapis.com/sgnlp/models/sentic_gcn/senticgcn_bert/pytorch_model.bin", config=config
 )
-
+APIKEY = "14d67047a8714deb9f5038a787f05821"
 
 app = Flask(__name__)
 CORS(app)
 
 
+URL = f"https://newsapi.org/v2/top-headlines?sources=cnn&apiKey={APIKEY}"
 
-
-@app.route('/data')
+@app.route('/data',  methods = ['GET', 'POST'])
 def index():
     response_body = {'data' : [-8, -9, -10, '48jhgkjl']}
     ## {headline : 'boy dies', article : 'boy dies at smwhere are smtime'}
+    data = request.form
 
-
-    headline = request.args.get('headline')
-    article = request.args.get('article')
+    headline = data['headline']
+    article = data['article']
     txt = "Boy dies in traffic accident"
 
     blob = TextBlob(headline)
@@ -77,6 +77,13 @@ def index():
 
 
     return {"overall" : score}
+
+@app.route('/getnews')
+def getnews():
+    x = requests.get(URL)
+    data = x.json()
+    
+    return jsonify(data['articles'][:50])
 
 if __name__ == '__main__':
     app.run(debug=True)

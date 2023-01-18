@@ -2,3 +2,5 @@ sgnlp
 textblob
 flask
 flask_cors
+newsapi-python
+requests
