@@ -65,8 +65,8 @@ def generate_score(title, desc):
 # Postprocessing
     post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
     print(post_outputs)
-    title_score = sum(post_outputs[0]['labels'])
-    article_score = sum(post_outputs[1]['labels'])
+    title_score = sum(post_outputs[0]['labels'])/len(post_outputs[0]['labels'])
+    article_score = sum(post_outputs[1]['labels'])/len(post_outputs[1]['labels'])
     score = "{}, {}".format(title_score, article_score)
     print(score)
     return score
@@ -149,6 +149,17 @@ def articles():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     result = cur.execute('''SELECT * FROM Articles''').fetchall()
+    conn.close()
+    return jsonify(result)
+
+
+# route to get latest article
+@app.route('/get-latest')
+def getLatest():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    result = cur.execute('''SELECT * FROM Articles WHERE article_id=(SELECT max(article_id) FROM Articles)''').fetchone()
+    conn.close()
     return jsonify(result)
 
 def updater():
