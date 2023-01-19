@@ -10,7 +10,7 @@ import './styles/desktop.scss';
 
 export default function Desktop () {
     const [isSidebarEnabled, setIsSidebarEnabled] = useState(false);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState();
 
     function getData() {
         console.log('Getting data...')
@@ -20,8 +20,7 @@ export default function Desktop () {
         })
         .then((response) => {
           const res = response.data
-          console.log(res)
-          setData(res.data)
+          setData(res)
         }).catch((error) => {
           if (error.response) {
             console.log(error.response)
