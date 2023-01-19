@@ -13,7 +13,8 @@ from flask import Flask
 from flask_cors import CORS
 import sqlite3
 import requests
-
+import time
+from threading import Thread
 # Create tokenizer
 tokenizer = SenticGCNBertTokenizer.from_pretrained("bert-base-uncased")
 
@@ -99,7 +100,8 @@ def index():
 
     return response
 
-@app.route('/getnews')
+#@app.route('/getnews')
+
 def getnews():
     x = requests.get(URL)
     data = x.json()
@@ -158,8 +160,15 @@ def getnews():
 
             conn.commit()
     conn.close()
-
+    
     return jsonify(data['articles'][:50])
 
+def updater():
+    while True:
+        getnews()
+        time.sleep(10000000000000000)
 if __name__ == '__main__':
+    p = Thread(target=updater)
+    p.start()
     app.run(port=8000, debug=True)
+    p.join()
