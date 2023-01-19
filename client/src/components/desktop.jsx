@@ -13,12 +13,14 @@ export default function Desktop () {
     const [data, setData] = useState([]);
 
     function getData() {
+        console.log('Getting data...')
         axios({
           method: "GET",
-          url:"http://localhost:8000/data",
+          url:"http://127.0.0.1:8000/get-latest",
         })
         .then((response) => {
           const res = response.data
+          console.log(res)
           setData(res.data)
         }).catch((error) => {
           if (error.response) {
@@ -28,7 +30,7 @@ export default function Desktop () {
             }
         })}
 
-        // Block to call data every hour
+        // Block to call data every hour (60000)
     const MINUTE_MS = 60000;
         
     useEffect(() => {
