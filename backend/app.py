@@ -50,7 +50,6 @@ URL = f"https://newsapi.org/v2/top-headlines?sources=cnn&apiKey={APIKEY}"
 
 @app.route('/data',  methods = ['GET', 'POST'])
 def index():
-    response_body = {'data' : [-8, -9, -10, '48jhgkjl']}
     ## {headline : 'boy dies', article : 'boy dies at smwhere are smtime'}
     data = request.form
 
@@ -88,7 +87,6 @@ def getnews():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
     for i in range(len(data['articles'])):
-        print(data['articles'][i]['author'])
         check_article = '''
             SELECT article_title FROM Articles WHERE article_title="{}"
         '''.format(data["articles"][i]['title'])
@@ -104,6 +102,7 @@ def getnews():
                 ''', (data['articles'][i]['source']['name'],))
                 conn.commit()
                 result = cur.execute(check_source)
+                print(result.fetchall())
 
             #source_id = result.fetchall()[0][0]
             #print(source_id)
@@ -120,7 +119,6 @@ def getnews():
             '''.format(data['articles'][i]['author'])
                 result = cur.execute(check_author)
             
-            
             if len(result.fetchall()) == 0:
                 cur.execute('''
                     INSERT INTO Authors(author_name) VALUES (?)
@@ -128,6 +126,7 @@ def getnews():
                 conn.commit()           
                 result = cur.execute(check_author)
 
+            print(result.fetchall())
             #author_id = result.fetchall()[0][0]
             #print(author_id)
 
