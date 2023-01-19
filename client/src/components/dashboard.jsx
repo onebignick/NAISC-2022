@@ -1,5 +1,6 @@
 import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel} from 'recharts'
 import { useState } from 'react';
+import { axios } from 'axios';
 
 //im just gonna add some example graphs here first
 
@@ -51,16 +52,18 @@ import { useState } from 'react';
 
 
 // example of one element in the data Array
-// {
-//     "source": {"id": null,"name": "CNBC"},
-//     "author": "Diana Olick",
-//     "title": "Mortgage demand jumps nearly 28% in one week, as interest rates drop to lowest point in months - CNBC",
-//     "description": "Mortgage rates are at the lowest level since September, and that is bringing new demand into the mortgage market.",
-//     "url": "https://www.cnbc.com/2023/01/18/mortgage-demand-jumps-interest-rates-drop.html",
-//     "urlToImage": "https://image.cnbcfm.com/api/v1/image/107100450-1659971734911-gettyimages-1347125073-120_0821_125790.jpeg?v=1674043202&w=1920&h=1080",
-//     "publishedAt": "2023-01-18T12:00:02Z",
-//     "content": "Consumers returned from the holiday season to find mortgage rates at their lowest point since September, and they are responding in dramatic fashion.\r\nMortgage application volume jumped nearly 28% la… [+1472 chars]"
-//     },
+//         article_id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         article_title TEXT,
+//         article_description TEXT,
+//         article_url TEXT,
+//         article_url_to_image TEXT,
+//         article_date_published TEXT,
+//         article_content TEXT,
+//         article_source_id INTEGER,
+//         article_author_id INTEGER,
+//         article_score TEXT,
+//         FOREIGN KEY (article_source_id) REFERENCES Sources(source_id),
+//         FOREIGN KEY (article_author_id) REFERENCES Authors(author_id)
 export default function Charts(props){
     const {data}=props
     
@@ -89,18 +92,52 @@ export default function Charts(props){
 
     formattedRangeofDates.map((date)=>{
         //send request to db to get articles which are from that news outlet and are on that specific date
-        setArticles((prev)=>{
-            let neww=prev.concat(/* the result from the */)
-            return neww
+        axios({
+            method: "GET",
+            url:`http://127.0.0.1:8000/get/${newsOutlet},${date}`
+          })
+          .then((response) => {
+            const res = response.data
+            console.log(res)
+            res.map((entry)=>{
+                setArticles((prev)=>{
+                    return [...prev,entry]
+                })
+            console.log(articles)
+            })
+            
         })
+          .catch((error) => {
+            if (error.response) {
+              console.log(error.response)
+              console.log(error.response.status)
+              console.log(error.response.headers)
+              }
+          })
+
+        
     })
 
-    //after getting all the articles for the news outlet for the past 10 days,have to find the average values for each day
-
-    
+    //after getting all the articles for the news outlet for the past 10 days,have to find the average values for each day,right now articles is an array of article from the past 10 days and there may be more then one article per day so we need find average score per day
 
 
-    
-    
+
+    return (
+        <LineChart  data={articles} >
+        <Line  dataKey="article_score"  />
+        <CartesianGrid  />
+        <XAxis dataKey="article_date_published" />
+        <YAxis />
+        <Tooltip />
+    </LineChart>
+    )
+
     
 }
+    
+
+
+    
+    
+    
+

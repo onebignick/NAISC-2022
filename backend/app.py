@@ -152,6 +152,7 @@ def articles():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     result = cur.execute('''SELECT * FROM Articles''').fetchall()
+    print(result)
     conn.close()
     return jsonify(result)
 
@@ -164,6 +165,8 @@ def getLatest():
     result = cur.execute('''SELECT * FROM Articles WHERE article_id=(SELECT max(article_id) FROM Articles)''').fetchone()
     conn.close()
     return jsonify(result)
+
+
 
 def updater():
     while True:
