@@ -68,38 +68,9 @@ def generate_score(title, desc):
     score = sum(post_outputs[0]['labels'])
     return score
 
-@app.route('/data',  methods = ['GET', 'POST'])
-def index():
-    ## {headline : 'boy dies', article : 'boy dies at smwhere are smtime'}
-    data = request.form
 
-    headline = data['headline']
-    article = data['article']
-    txt = "Boy dies in traffic accident"
-
-    blob = TextBlob(headline)
-    headline_aspects = [i for i in blob.noun_phrases]
-    #print(aspects)
-    blob1 = TextBlob(article)
-    article_aspects = [i for i in blob1.noun_phrases]
-
-    inputs = [{"aspects":headline_aspects, "sentence": headline, },{"aspects":article_aspects, "sentence": article,}]
-    #print(inputs)
-    # processing
-    processed_inputs, processed_indices = preprocessor(inputs)
-    outputs = model(processed_indices)
-
-# Postprocessing
-    post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
-    score = sum(post_outputs['labels'])
-
-    response = jsonify({"overall" : score})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-
-    return response
-
-#@app.route('/getnews')
-
+# api to get news
+@app.route('/getnews')
 def getnews():
     x = requests.get(URL)
     data = x.json()
@@ -108,31 +79,35 @@ def getnews():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
     # New data replaces all data
-    cur.execute('''DELETE FROM Articles''') 
+    #cur.execute('''DELETE FROM Articles''')
+
+    # for each article in api call
     for i in range(len(data['articles'])):
+        # Check whether article already exists in db
         check_article = '''
             SELECT article_title FROM Articles WHERE article_title="{}"
         '''.format(data["articles"][i]['title'])
         result = cur.execute(check_article)
+
+        # If article is not present
         if len(result.fetchall()) == 0:
+            # Check if source is in db
             check_source = '''
                 SELECT source_name FROM Sources WHERE source_name="{}"
             '''.format(data['articles'][i]['source']['name'])
             result = cur.execute(check_source)
+            # if source is not in add it in
             if len(result.fetchall()) == 0:
                 cur.execute('''
                     INSERT INTO Sources(source_name) VALUES (?)
                 ''', (data['articles'][i]['source']['name'],))
                 conn.commit()
-                result = cur.execute(check_source)
-                #(result.fetchall())
 
-            #source_id = result.fetchall()[0][0]
-            #print(source_id)
-
+            # Check if author is in db
             check_author = '''
                 SELECT author_name FROM Authors WHERE author_name="{}"
             '''.format(data['articles'][i]['author'])
+            # Fix for some weird authors
             try:
                 result = cur.execute(check_author)
             except:
@@ -142,6 +117,7 @@ def getnews():
             '''.format(data['articles'][i]['author'])
                 result = cur.execute(check_author)
             
+            # If author is not in add author in
             if len(result.fetchall()) == 0:
                 cur.execute('''
                     INSERT INTO Authors(author_name) VALUES (?)
@@ -149,22 +125,23 @@ def getnews():
                 conn.commit()           
                 result = cur.execute(check_author)
 
-            #print(result.fetchall())
-            #author_id = result.fetchall()[0][0]
-            #print(author_id)
+            # foreign keys and score generation
             source_id = conn.execute('''SELECT source_id FROM Sources WHERE source_name="{}"'''.format(data['articles'][i]['source']['name'])).fetchone()[0]
             author_id = conn.execute('''SELECT author_id FROM Authors WHERE author_name="{}"'''.format(data['articles'][i]['author'])).fetchone()[0]
             score = generate_score(data['articles'][i]['title'],data['articles'][i]['description'])
 
+            # Adding of article into db
             cur.execute('''
                 INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_score, article_source_id, article_author_id) 
                 VALUES  (?,?,?,?,?,?,?,?,?)
             ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'], data['articles'][i]['content'], score, source_id, author_id))
 
             conn.commit()
+            print("article added")
+        else:
+            print("article called but was already in database")
     conn.close()
-    
-    #return jsonify(data['articles'][:50])
+
 
 @app.route('/articles')
 def articles():
@@ -177,7 +154,7 @@ def updater():
     while True:
         getnews()
         #time.sleep(10000000000000000)
-        time.sleep(100000)
+        time.sleep(1000000)
 
 if __name__ == '__main__':
     p = Thread(target=updater)
