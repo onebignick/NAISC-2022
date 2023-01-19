@@ -63,13 +63,16 @@ def generate_score(title, desc):
     outputs = model(processed_indices)
 
 # Postprocessing
-    post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
-    print(post_outputs)
-    title_score = sum(post_outputs[0]['labels'])/len(post_outputs[0]['labels'])
-    article_score = sum(post_outputs[1]['labels'])/len(post_outputs[1]['labels'])
-    score = "{}, {}".format(title_score, article_score)
-    print(score)
-    return score
+    try:
+        post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
+        print(post_outputs)
+        title_score = sum(post_outputs[0]['labels'])/len(post_outputs[0]['labels'])
+        article_score = sum(post_outputs[1]['labels'])/len(post_outputs[1]['labels'])
+        score = "{}, {}".format(title_score, article_score)
+        print(score)
+        return score
+    except:
+        return -2
 
 # function to get news
 def getnews():
@@ -154,7 +157,7 @@ def articles():
 
 
 # route to get latest article
-@app.route('/get-latest')
+@app.route('/get-latest', methods=['GET'])
 def getLatest():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
