@@ -48,6 +48,27 @@ CORS(app)
 
 URL = f"https://newsapi.org/v2/top-headlines?sources=cnn&apiKey={APIKEY}"
 
+def generate_score(title, desc):
+    blob = TextBlob(title)
+    headline_aspects = [i for i in blob.noun_phrases]
+    #print(aspects)
+    blob1 = TextBlob(desc)
+    article_aspects = [i for i in blob1.noun_phrases]
+
+    inputs = [{"aspects":headline_aspects, "sentence": title, },{"aspects":article_aspects, "sentence": desc,}]
+    print(inputs)
+    # processing
+    processed_inputs, processed_indices = preprocessor(inputs)
+    outputs = model(processed_indices)
+
+# Postprocessing
+    post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
+    score = sum(post_outputs['labels'])
+    return score
+
+
+
+
 @app.route('/data',  methods = ['GET', 'POST'])
 def index():
     ## {headline : 'boy dies', article : 'boy dies at smwhere are smtime'}
@@ -129,7 +150,7 @@ def getnews():
             print(result.fetchall())
             #author_id = result.fetchall()[0][0]
             #print(author_id)
-
+            score = generate_score(data['articles'][i]['title'],data['articles'][i]['description'])
             cur.execute('''
                 INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content) 
                 VALUES  (?,?,?,?,?,?)
