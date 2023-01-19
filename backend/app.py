@@ -57,14 +57,14 @@ def generate_score(title, desc):
     article_aspects = [i for i in blob1.noun_phrases]
 
     inputs = [{"aspects":headline_aspects, "sentence": title, },{"aspects":article_aspects, "sentence": desc,}]
-    print(inputs)
+    #print(inputs)
     # processing
     processed_inputs, processed_indices = preprocessor(inputs)
     outputs = model(processed_indices)
 
 # Postprocessing
     post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
-    print(post_outputs)
+    #print(post_outputs)
     score = sum(post_outputs[0]['labels'])
     return score
 
@@ -84,7 +84,7 @@ def index():
     article_aspects = [i for i in blob1.noun_phrases]
 
     inputs = [{"aspects":headline_aspects, "sentence": headline, },{"aspects":article_aspects, "sentence": article,}]
-    print(inputs)
+    #print(inputs)
     # processing
     processed_inputs, processed_indices = preprocessor(inputs)
     outputs = model(processed_indices)
@@ -107,6 +107,8 @@ def getnews():
     # connect to database
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
+    # New data replaces all data
+    cur.execute('''DELETE FROM Articles''') 
     for i in range(len(data['articles'])):
         check_article = '''
             SELECT article_title FROM Articles WHERE article_title="{}"
@@ -123,7 +125,7 @@ def getnews():
                 ''', (data['articles'][i]['source']['name'],))
                 conn.commit()
                 result = cur.execute(check_source)
-                print(result.fetchall())
+                #(result.fetchall())
 
             #source_id = result.fetchall()[0][0]
             #print(source_id)
@@ -147,19 +149,22 @@ def getnews():
                 conn.commit()           
                 result = cur.execute(check_author)
 
-            print(result.fetchall())
+            #print(result.fetchall())
             #author_id = result.fetchall()[0][0]
             #print(author_id)
+            source_id = conn.execute('''SELECT source_id FROM Sources WHERE source_name="{}"'''.format(data['articles'][i]['source']['name'])).fetchone()[0]
+            author_id = conn.execute('''SELECT author_id FROM Authors WHERE author_name="{}"'''.format(data['articles'][i]['author'])).fetchone()[0]
             score = generate_score(data['articles'][i]['title'],data['articles'][i]['description'])
+
             cur.execute('''
-                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_score) 
-                VALUES  (?,?,?,?,?,?,?)
-            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'], data['articles'][i]['content'], score))
+                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_score, article_source_id, article_author_id) 
+                VALUES  (?,?,?,?,?,?,?,?,?)
+            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'], data['articles'][i]['content'], score, source_id, author_id))
 
             conn.commit()
     conn.close()
     
-    return jsonify(data['articles'][:50])
+    #return jsonify(data['articles'][:50])
 
 @app.route('/articles')
 def articles():
@@ -171,7 +176,9 @@ def articles():
 def updater():
     while True:
         getnews()
-        time.sleep(10000000000000000)
+        #time.sleep(10000000000000000)
+        time.sleep(100000)
+
 if __name__ == '__main__':
     p = Thread(target=updater)
     p.start()
