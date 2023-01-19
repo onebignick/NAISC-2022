@@ -71,9 +71,7 @@ def generate_score(title, desc):
     print(score)
     return score
 
-
-# api to get news
-@app.route('/getnews')
+# function to get news
 def getnews():
     x = requests.get(URL)
     data = x.json()
