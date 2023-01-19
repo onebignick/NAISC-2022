@@ -64,11 +64,9 @@ def generate_score(title, desc):
 
 # Postprocessing
     post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
-    score = sum(post_outputs['labels'])
+    print(post_outputs)
+    score = sum(post_outputs[0]['labels'])
     return score
-
-
-
 
 @app.route('/data',  methods = ['GET', 'POST'])
 def index():
@@ -154,14 +152,21 @@ def getnews():
             #print(author_id)
             score = generate_score(data['articles'][i]['title'],data['articles'][i]['description'])
             cur.execute('''
-                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content) 
-                VALUES  (?,?,?,?,?,?)
-            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'], data['articles'][i]['content']))
+                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_score) 
+                VALUES  (?,?,?,?,?,?,?)
+            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'], data['articles'][i]['content'], score))
 
             conn.commit()
     conn.close()
     
     return jsonify(data['articles'][:50])
+
+@app.route('/articles')
+def articles():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    result = cur.execute('''SELECT * FROM Articles''').fetchall()
+    return jsonify(result)
 
 def updater():
     while True:
