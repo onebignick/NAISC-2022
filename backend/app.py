@@ -64,8 +64,11 @@ def generate_score(title, desc):
 
 # Postprocessing
     post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
-    #print(post_outputs)
-    score = sum(post_outputs[0]['labels'])
+    print(post_outputs)
+    title_score = sum(post_outputs[0]['labels'])
+    article_score = sum(post_outputs[1]['labels'])
+    score = "{}, {}".format(title_score, article_score)
+    print(score)
     return score
 
 
@@ -85,8 +88,8 @@ def getnews():
     for i in range(len(data['articles'])):
         # Check whether article already exists in db
         check_article = '''
-            SELECT article_title FROM Articles WHERE article_title="{}"
-        '''.format(data["articles"][i]['title'])
+            SELECT article_url FROM Articles WHERE article_url="{}"
+        '''.format(data["articles"][i]['url'])
         result = cur.execute(check_article)
 
         # If article is not present
