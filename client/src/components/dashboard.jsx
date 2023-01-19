@@ -1,52 +1,53 @@
 import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel} from 'recharts'
+import { useState } from 'react';
 
 //im just gonna add some example graphs here first
 
 //firstly, a line graph which is useful in comparing data over time, can be used to show the trend of news outlets over time
-const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}, {name: 'Page B', uv: 500, pv: 2500, amt: 2500},{name: 'Page C', uv: 300, pv: 2300, amt: 2300}];
+// const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}, {name: 'Page B', uv: 500, pv: 2500, amt: 2500},{name: 'Page C', uv: 300, pv: 2300, amt: 2300}];
 
-const renderLineChart = (
-  <LineChart width={600} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-    <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-    <XAxis dataKey="name" />
-    <YAxis />
-    <Tooltip />
-  </LineChart>
-)
+// const renderLineChart = (
+//   <LineChart width={600} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+//     <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+//     <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+//     <XAxis dataKey="name" />
+//     <YAxis />
+//     <Tooltip />
+//   </LineChart>
+// )
 
 //secondly a radial bar chart which can be useful in displaying overall mood/comparison between all the news outlets the user has been using
 
-const renderRadialBarChart=(
-    <RadialBarChart 
-        width={730} 
-        height={250} 
-        innerRadius="10%" 
-        outerRadius="80%" 
-        data={data} 
-        startAngle={180} 
-        endAngle={0}
->
-        <RadialBar minAngle={15} label={{ fill: '#666', position: 'insideStart' }} background clockWise={true} dataKey='uv' />
-        <Legend iconSize={10} width={120} height={140} layout='vertical' verticalAlign='middle' align="right" />
-        <Tooltip />
-    </RadialBarChart>
-)
+// const renderRadialBarChart=(
+//     <RadialBarChart 
+//         width={730} 
+//         height={250} 
+//         innerRadius="10%" 
+//         outerRadius="80%" 
+//         data={data} 
+//         startAngle={180} 
+//         endAngle={0}
+// >
+//         <RadialBar minAngle={15} label={{ fill: '#666', position: 'insideStart' }} background clockWise={true} dataKey='uv' />
+//         <Legend iconSize={10} width={120} height={140} layout='vertical' verticalAlign='middle' align="right" />
+//         <Tooltip />
+//     </RadialBarChart>
+// )
 
 //Thirdly a funnel chart which can be useful in comparing single values of data, like average for different news outlets (plus it looks cool)
 
-const renderFunnelChart=(
-    <FunnelChart width={730} height={250}>
-        <Tooltip />
-        <Funnel
-            dataKey="value"
-            data={data}
-            isAnimationActive
-        >
-            <LabelList position="right" fill="#000" stroke="none" dataKey="name" />
-        </Funnel>
-    </FunnelChart>
-)
+// const renderFunnelChart=(
+//     <FunnelChart width={730} height={250}>
+//         <Tooltip />
+//         <Funnel
+//             dataKey="value"
+//             data={data}
+//             isAnimationActive
+//         >
+//             <LabelList position="right" fill="#000" stroke="none" dataKey="name" />
+//         </Funnel>
+//     </FunnelChart>
+// )
 
 
 // example of one element in the data Array
@@ -62,13 +63,44 @@ const renderFunnelChart=(
 //     },
 export default function Charts(props){
     const {data}=props
-    //First do a line graph for latest 10 days for a certain news outlet
-    const fullCurrentDate= new Date()
-    let day = fullCurrentDate.getDate();
-    let month = fullCurrentDate.getMonth() + 1;
-    let year = fullCurrentDate.getFullYear();
+    
+    const [articles,setArticles]=useState([])
+    const[newsOutlet,setNewsOutlet]=useState("")
+    const[today,setToday]=useState("")
 
-    // This arrangement can be altered based on how we want the date's format to appear.
-    let currentDate = `${day}-${month}-${year}`;
-    console.log(currentDate); // "17-6-2022"
+    //the below is assuming the reader chose this news outlet
+    setNewsOutlet("CNBC")
+
+    //First do a line graph for latest 10 days for a certain news outlet
+  
+
+    //get the 10 latest days 
+    const rangeOfDates=[]
+    for(i=0;i<10;i++){
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        rangeOfDates.push(date)
+    }
+    
+    const formattedRangeofDates=rangeOfDates.map((date=>{
+        formattedDate=`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+        return formattedDate
+    }))
+
+    formattedRangeofDates.map((date)=>{
+        //send request to db to get articles which are from that news outlet and are on that specific date
+        setArticles((prev)=>{
+            let neww=prev.concat(/* the result from the */)
+            return neww
+        })
+    })
+
+    //after getting all the articles for the news outlet for the past 10 days,have to find the average values for each day
+
+    
+
+
+    
+    
+    
 }
