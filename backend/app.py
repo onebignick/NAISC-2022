@@ -185,6 +185,18 @@ def getLg():
     conn.close()
     return jsonify(result)
 
+@app.route('/getFc',methods=['GET'])
+def getFc():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    #how do the same from the sourceInfo route, whereby the date is for today So for instance like [[1,"CNN",  "[0.0,-0.5777],[0.1,-0.654]"],[2,"BBC",  "[0.0,-0.5777],[0.1,-0.654]"]]
+    sqlStatement='''SELECT * FROM Articles WHERE article_date_published=?% AND article_source_id=?'''
+    
+    result = cur.execute(sqlStatement,[]).fetchall()
+    conn.close()
+    return jsonify(result)
+
+
 
 
 
