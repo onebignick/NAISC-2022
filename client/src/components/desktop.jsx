@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import Navbar from './navbar';
 import Sidebar from './sidebar';
+import RadialSource from './radialsource';
 
 import './styles/css-reset.scss';
 import './styles/desktop.scss';
@@ -38,7 +39,7 @@ export default function Desktop () {
 
         return () => clearInterval(interval);
          // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-        }, [])
+    }, [])
 
     
 
@@ -55,6 +56,7 @@ export default function Desktop () {
                 <div id="test">
                    {data}
                 </div>
+                <RadialSource />
             </div>
         </div>
     );
