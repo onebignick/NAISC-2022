@@ -68,8 +68,8 @@ def generate_score(title, desc):
         print(post_outputs)
         title_score = sum(post_outputs[0]['labels'])/len(post_outputs[0]['labels'])
         article_score = sum(post_outputs[1]['labels'])/len(post_outputs[1]['labels'])
-        score = "{}, {}".format(title_score, article_score)
-        print(score)
+        score = "[{},{}]".format(title_score, article_score)
+        #print(score)
         return score
     except:
         return -2
@@ -83,7 +83,7 @@ def getnews():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
     # New data replaces all data
-    #cur.execute('''DELETE FROM Articles''')
+    # cur.execute('''DELETE FROM Articles''')
 
     # for each article in api call
     for i in range(len(data['articles'])):
@@ -163,6 +163,14 @@ def getLatest():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     result = cur.execute('''SELECT * FROM Articles WHERE article_id=(SELECT max(article_id) FROM Articles)''').fetchone()
+    conn.close()
+    return jsonify(result)
+
+@app.route('/sourceInfo')
+def sourceInfo():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    result = cur.execute('''SELECT S.source_id, S.source_name, group_concat(A.article_score, ",") FROM Sources AS S JOIN Articles AS A ON S.source_id = A.article_source_id''').fetchall()
     conn.close()
     return jsonify(result)
 
