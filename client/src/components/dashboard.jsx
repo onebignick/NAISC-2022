@@ -1,6 +1,8 @@
 import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel} from 'recharts'
 import { useState } from 'react';
 import { axios } from 'axios';
+import RadialSource from './radialsource';
+import { useEffect } from 'react';
 
 //im just gonna add some example graphs here first
 
@@ -64,15 +66,18 @@ import { axios } from 'axios';
 //         article_score TEXT,
 //         FOREIGN KEY (article_source_id) REFERENCES Sources(source_id),
 //         FOREIGN KEY (article_author_id) REFERENCES Authors(author_id)
-export default function Charts(props){
-    const {data}=props
+
+//create the line graph first
+ function LineGraph(props){
     
-    const [articles,setArticles]=useState([])
-    const[newsOutlet,setNewsOutlet]=useState("")
-    const[today,setToday]=useState("")
+    //lg stands for line graphs
+    
+    const [lgArticles,setLgArticles]=useState([])
+    const[lgNewsOutlet,setLgNewsOutlet]=useState("")
+    const[today,setToday]=useState(new Date())
 
     //the below is assuming the reader chose this news outlet
-    setNewsOutlet("CNBC")
+    setLgNewsOutlet("CNBC")
 
     //First do a line graph for latest 10 days for a certain news outlet
   
@@ -94,16 +99,17 @@ export default function Charts(props){
         //send request to db to get articles which are from that news outlet and are on that specific date
         axios({
             method: "GET",
-            url:`http://127.0.0.1:8000/get/${newsOutlet},${date}`
+            url:`http://127.0.0.1:8000/getLg/${lgNewsOutlet},${date}`
           })
           .then((response) => {
             const res = response.data
             console.log(res)
             res.map((entry)=>{
-                setArticles((prev)=>{
-                    return [...prev,entry]
+                
+                setLgArticles((prev)=>{
+                    return [...prev,Object.assign({},entry)]
                 })
-            console.log(articles)
+            console.log(lgArticles)
             })
             
         })
@@ -123,16 +129,95 @@ export default function Charts(props){
 
 
     return (
-        <LineChart  data={articles} >
-        <Line  dataKey="article_score"  />
-        <CartesianGrid  />
-        <XAxis dataKey="article_date_published" />
-        <YAxis />
-        <Tooltip />
-    </LineChart>
+        <>
+            <h2>Trend across last 10 days</h2>
+            <LineChart  data={lgArticles} >
+            <Line  dataKey="article_score"  />
+            <CartesianGrid  />
+            <XAxis dataKey="article_date_published" />
+            <YAxis />
+            <Tooltip />
+            </LineChart></>
+       
     )
 
     
+}
+
+
+function FunnelChart(){
+
+    const[today,setToday]=useState(new Date())
+    const [fcArticles,setFcArticles]=useState([])
+
+    axios({
+        method: "GET",
+        url:`http://127.0.0.1:8000/getFc`
+      })
+      .then((response) => {
+        response.forEach(row => {
+            const raw_scores = row[2].split("],[").map(score => {
+                return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
+
+            });
+            console.log(raw_scores)
+
+            const noOfArticles = raw_scores.length;
+
+            let totalHeadlineScore = 0;
+            let totalContentScore = 0;
+            raw_scores.forEach(score => {
+                totalHeadlineScore += score[0];
+                totalContentScore += score[1];
+            });
+            const avgHeadlineScore = totalHeadlineScore / noOfArticles;
+            const avgContentScore = totalContentScore / noOfArticles;
+            const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
+            tmpData.push({
+                name: row[1],
+                value: clickbaitIndex,
+            })
+        })
+        setFcArticles(tmpData)
+        
+    })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+          }
+      })
+
+
+    return(
+        <>
+            <h2>Comparison between News Outlets Today</h2>
+            <FunnelChart >
+                <Tooltip />
+                <Funnel
+                    dataKey="value"
+                    data={fcArticles}
+                    isAnimationActive
+                >
+                    <LabelList  dataKey="name" />
+                </Funnel>
+            </FunnelChart>
+        </>
+        
+    )
+}
+
+export default function Dashboard(props){
+
+    return(
+        <>
+        <LineGraph/>
+        <RadialSource/>
+        <FunnelChart/>
+        </> 
+    )
+
 }
     
 

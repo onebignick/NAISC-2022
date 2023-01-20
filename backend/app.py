@@ -174,6 +174,18 @@ def sourceInfo():
     conn.close()
     return jsonify(result)
 
+@app.route('/getLg/:conditions',methods=['GET'])
+def getLg():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    #how to extract parameter from url, first parameter is news outlet then second is date and the % represents the wild card, i did this before in js but now in python i not sure how to convert properly i think got syntax error alr
+    sqlStatement='''SELECT * FROM Articles WHERE article_date_published=?% AND article_source_id=?'''
+    #the 2 params are in the empty array below
+    result = cur.execute(sqlStatement,[]).fetchall()
+    conn.close()
+    return jsonify(result)
+
+
 
 
 def updater():
