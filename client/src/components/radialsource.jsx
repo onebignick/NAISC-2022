@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RadialBarChart, RadialBar } from "recharts";
+import { RadialBarChart, RadialBar, PolarAngleAxis, Legend, Tooltip } from "recharts";
 import axios from "axios";
 
 async function getSourceInfo() {
@@ -33,7 +33,7 @@ export default function RadialSource() {
                 });
                 const avgHeadlineScore = totalHeadlineScore / noOfArticles;
                 const avgContentScore = totalContentScore / noOfArticles;
-                const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore);
+                const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
                 tmpData.push({
                     name: row[1],
                     value: clickbaitIndex,
@@ -45,20 +45,28 @@ export default function RadialSource() {
 
     console.log(data)
     return (
-        <div>
+        <div style={{
+            backgroundColor: "white"
+        }}>
             <h1>Source Chart</h1>
             <RadialBarChart 
-                width={730} 
-                height={250} 
-                innerRadius="10%" 
-                outerRadius="80%" 
-                data={data} 
-                startAngle={180} 
-                endAngle={0}
+                width={500} 
+                height={500} 
+                innerRadius="50%" 
+                outerRadius="100%" 
+                data={data}
+                cx="50%"
+                cy="50%"
             >
-            {/* <RadialBar minAngle={15} label={{ fill: '#666', position: 'insideStart' }} background clockWise={true} dataKey='uv' />
+            <PolarAngleAxis
+                type="number"
+                domain={[0, 2]}
+                dataKey={'value'}
+                angleAxisId={0}
+                tick={false}
+            />
+            <RadialBar minAngle={15} label={{ fill: '#666', position: 'insideStart' }} background clockWise={true} dataKey={'value'} />
             <Legend iconSize={10} width={120} height={140} layout='vertical' verticalAlign='middle' align="right" />
-            <Tooltip />  */}
             </RadialBarChart>
         </div>
     );

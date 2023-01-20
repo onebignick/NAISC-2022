@@ -33,13 +33,13 @@ export default function Desktop () {
         // Block to call data every hour (60000)
     const MINUTE_MS = 60000;
         
-    useEffect(() => {
-        const interval = setInterval(() => {
-            getData()}, MINUTE_MS);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         getData()}, MINUTE_MS);
 
-        return () => clearInterval(interval);
-         // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-    }, [])
+    //     return () => clearInterval(interval);
+    //      // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    // }, [])
 
     
 
@@ -53,9 +53,9 @@ export default function Desktop () {
                     setIsSidebarEnabled={(newActive) => setIsSidebarEnabled(newActive)}
                     enabled={isSidebarEnabled}
                 />
-                <div id="test">
+                {/* <div id="test">
                    {data}
-                </div>
+                </div> */}
                 <RadialSource />
             </div>
         </div>
