@@ -99,7 +99,11 @@ import { useEffect } from 'react';
         //send request to db to get articles which are from that news outlet and are on that specific date
         axios({
             method: "GET",
-            url:`http://127.0.0.1:8000/getLg/${lgNewsOutlet},${date}`
+            url:`http://127.0.0.1:8000/getLg`,
+            params: {
+                source: lgNewsOutlet,
+                date: date
+            },
           })
           .then((response) => {
             const res = response.data

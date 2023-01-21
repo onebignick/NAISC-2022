@@ -138,7 +138,7 @@ def getnews():
             cur.execute('''
                 INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_score, article_source_id, article_author_id) 
                 VALUES  (?,?,?,?,?,?,?,?,?)
-            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'], data['articles'][i]['content'], score, source_id, author_id))
+            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'][:10], data['articles'][i]['content'], score, source_id, author_id))
 
             conn.commit()
             print("article added")
@@ -174,14 +174,14 @@ def sourceInfo():
     conn.close()
     return jsonify(result)
 
-@app.route('/getLg/:conditions',methods=['GET'])
+@app.route('/getLg',methods=['GET'])
 def getLg():
+    source = request.args['source']
+    date = request.args['date']
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    #how to extract parameter from url, first parameter is news outlet then second is date and the % represents the wild card, i did this before in js but now in python i not sure how to convert properly i think got syntax error alr
-    sqlStatement='''SELECT * FROM Articles WHERE article_date_published=?% AND article_source_id=?'''
-    #the 2 params are in the empty array below
-    result = cur.execute(sqlStatement,[]).fetchall()
+    sqlStatement='''SELECT * FROM Articles WHERE article_date_published = ? AND article_source_id = ?'''
+    result = cur.execute(sqlStatement,[source, date]).fetchall()
     conn.close()
     return jsonify(result)
 
@@ -189,9 +189,7 @@ def getLg():
 def getFc():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    #how do the same from the sourceInfo route, whereby the date is for today So for instance like [[1,"CNN",  "[0.0,-0.5777],[0.1,-0.654]"],[2,"BBC",  "[0.0,-0.5777],[0.1,-0.654]"]]
-    sqlStatement='''SELECT * FROM Articles WHERE article_date_published=?% AND article_source_id=?'''
-    
+    sqlStatement='''SELECT S.source_id, S.source_name, group_concat(A.article_score, ",") FROM Sources AS S JOIN Articles AS A ON S.source_id = A.article_source_id WHERE A.article_date_published = DATE() '''
     result = cur.execute(sqlStatement,[]).fetchall()
     conn.close()
     return jsonify(result)
