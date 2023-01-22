@@ -1,4 +1,4 @@
-import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel} from 'recharts'
+import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel,LabelList} from 'recharts'
 import { useState } from 'react';
 import { axios } from 'axios';
 import RadialSource from './radialsource';
@@ -39,18 +39,8 @@ import { useEffect } from 'react';
 
 //Thirdly a funnel chart which can be useful in comparing single values of data, like average for different news outlets (plus it looks cool)
 
-// const renderFunnelChart=(
-//     <FunnelChart width={730} height={250}>
-//         <Tooltip />
-//         <Funnel
-//             dataKey="value"
-//             data={data}
-//             isAnimationActive
-//         >
-//             <LabelList position="right" fill="#000" stroke="none" dataKey="name" />
-//         </Funnel>
-//     </FunnelChart>
-// )
+
+
 
 
 // example of one element in the data Array
@@ -84,14 +74,14 @@ import { useEffect } from 'react';
 
     //get the 10 latest days 
     const rangeOfDates=[]
-    for(i=0;i<10;i++){
+    for(let i=0;i<10;i++){
         const date = new Date();
         date.setDate(date.getDate() - i);
         rangeOfDates.push(date)
     }
     
     const formattedRangeofDates=rangeOfDates.map((date=>{
-        formattedDate=`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+         let formattedDate=`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
         return formattedDate
     }))
 
@@ -149,7 +139,7 @@ import { useEffect } from 'react';
 }
 
 
-function FunnelChart(){
+function FunnelGraph(props){
 
     const[today,setToday]=useState(new Date())
     const [fcArticles,setFcArticles]=useState([])
@@ -159,6 +149,7 @@ function FunnelChart(){
         url:`http://127.0.0.1:8000/getFc`
       })
       .then((response) => {
+        let tmpData=[]
         response.forEach(row => {
             const raw_scores = row[2].split("],[").map(score => {
                 return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
@@ -183,6 +174,7 @@ function FunnelChart(){
             })
         })
         setFcArticles(tmpData)
+
         
     })
       .catch((error) => {
@@ -218,7 +210,7 @@ export default function Dashboard(props){
         <>
         <LineGraph/>
         <RadialSource/>
-        <FunnelChart/>
+        <FunnelGraph/>
         </> 
     )
 

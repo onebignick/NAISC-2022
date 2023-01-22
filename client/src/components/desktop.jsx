@@ -5,6 +5,7 @@ import axios from 'axios';
 import Navbar from './navbar';
 import Sidebar from './sidebar';
 import RadialSource from './radialsource';
+import Dashboard from './dashboard';
 
 import './styles/css-reset.scss';
 import './styles/desktop.scss';
@@ -57,6 +58,7 @@ export default function Desktop () {
                    {data}
                 </div> */}
                 <RadialSource />
+                <Dashboard/>
             </div>
         </div>
     );
