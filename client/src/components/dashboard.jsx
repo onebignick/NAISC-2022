@@ -1,6 +1,6 @@
 import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel,LabelList} from 'recharts'
 import { useState } from 'react';
-import { axios } from 'axios';
+import  axios  from 'axios';
 import RadialSource from './radialsource';
 import { useEffect } from 'react';
 
@@ -85,38 +85,41 @@ import { useEffect } from 'react';
         return formattedDate
     }))
 
-    formattedRangeofDates.map((date)=>{
-        //send request to db to get articles which are from that news outlet and are on that specific date
-        axios({
-            method: "GET",
-            url:`http://127.0.0.1:8000/getLg`,
-            params: {
-                source: lgNewsOutlet,
-                date: date
-            },
-          })
-          .then((response) => {
-            const res = response.data
-            console.log(res)
-            res.map((entry)=>{
-                
-                setLgArticles((prev)=>{
-                    return [...prev,Object.assign({},entry)]
+    useEffect(()=>{
+        formattedRangeofDates.map((date)=>{
+            //send request to db to get articles which are from that news outlet and are on that specific date
+            axios({
+                method: "GET",
+                url:`http://127.0.0.1:8000/getLg`,
+                params: {
+                    source: lgNewsOutlet,
+                    date: date
+                },
+              })
+              .then((response) => {
+                const res = response.data
+                console.log(res)
+                res.map((entry)=>{
+                    
+                    setLgArticles((prev)=>{
+                        return [...prev,Object.assign({},entry)]
+                    })
+                console.log(lgArticles)
                 })
-            console.log(lgArticles)
+                
             })
+              .catch((error) => {
+                if (error.response) {
+                  console.log(error.response)
+                  console.log(error.response.status)
+                  console.log(error.response.headers)
+                  }
+              })
+    
             
         })
-          .catch((error) => {
-            if (error.response) {
-              console.log(error.response)
-              console.log(error.response.status)
-              console.log(error.response.headers)
-              }
-          })
-
-        
-    })
+    },[])
+    
 
     //after getting all the articles for the news outlet for the past 10 days,have to find the average values for each day,right now articles is an array of article from the past 10 days and there may be more then one article per day so we need find average score per day
 
@@ -143,47 +146,49 @@ function FunnelGraph(props){
 
     const[today,setToday]=useState(new Date())
     const [fcArticles,setFcArticles]=useState([])
-
-    axios({
-        method: "GET",
-        url:`http://127.0.0.1:8000/getFc`
-      })
-      .then((response) => {
-        let tmpData=[]
-        response.forEach(row => {
-            const raw_scores = row[2].split("],[").map(score => {
-                return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
-
-            });
-            console.log(raw_scores)
-
-            const noOfArticles = raw_scores.length;
-
-            let totalHeadlineScore = 0;
-            let totalContentScore = 0;
-            raw_scores.forEach(score => {
-                totalHeadlineScore += score[0];
-                totalContentScore += score[1];
-            });
-            const avgHeadlineScore = totalHeadlineScore / noOfArticles;
-            const avgContentScore = totalContentScore / noOfArticles;
-            const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
-            tmpData.push({
-                name: row[1],
-                value: clickbaitIndex,
+    useEffect(()=>{
+        axios({
+            method: "GET",
+            url:`http://127.0.0.1:8000/getFc`
+          })
+          .then((response) => {
+            let tmpData=[]
+            response.forEach(row => {
+                const raw_scores = row[2].split("],[").map(score => {
+                    return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
+    
+                });
+                console.log(raw_scores)
+    
+                const noOfArticles = raw_scores.length;
+    
+                let totalHeadlineScore = 0;
+                let totalContentScore = 0;
+                raw_scores.forEach(score => {
+                    totalHeadlineScore += score[0];
+                    totalContentScore += score[1];
+                });
+                const avgHeadlineScore = totalHeadlineScore / noOfArticles;
+                const avgContentScore = totalContentScore / noOfArticles;
+                const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
+                tmpData.push({
+                    name: row[1],
+                    value: clickbaitIndex,
+                })
             })
+            setFcArticles(tmpData)
+    
+            
         })
-        setFcArticles(tmpData)
-
-        
-    })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response)
-          console.log(error.response.status)
-          console.log(error.response.headers)
-          }
-      })
+          .catch((error) => {
+            if (error.response) {
+              console.log(error.response)
+              console.log(error.response.status)
+              console.log(error.response.headers)
+              }
+          })
+    },[])
+    
 
 
     return(
@@ -208,7 +213,8 @@ export default function Dashboard(props){
 
     return(
         <>
-        <LineGraph/>
+        {/*<LineGraph/>*/}
+        
         <RadialSource/>
         <FunnelGraph/>
         </> 

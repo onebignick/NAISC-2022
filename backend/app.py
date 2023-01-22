@@ -194,6 +194,16 @@ def getFc():
     conn.close()
     return jsonify(result)
 
+@app.route('/getAll',methods=['GET'])
+def getAll():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    sqlStatement='''SELECT * FROM ARTICLES '''
+    result = cur.execute(sqlStatement,[]).fetchall()
+    conn.close()
+    return jsonify(result)
+
+
 
 
 

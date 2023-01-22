@@ -17,13 +17,13 @@ export default function RadialSource() {
     useEffect(() => {
         getSourceInfo().then(result => {
             const tmpData = [];
-            console.log(result)
+            
             result.forEach(row => {
                 const raw_scores = row[2].split("],[").map(score => {
                     return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
 
                 });
-                console.log(raw_scores)
+                
 
                 const noOfArticles = raw_scores.length;
 
@@ -45,7 +45,7 @@ export default function RadialSource() {
         });
     }, []);
 
-    console.log(data)
+    
     return (
         <div style={{
             backgroundColor: "white"
