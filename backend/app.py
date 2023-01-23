@@ -65,7 +65,7 @@ def generate_score(title, desc):
 # Postprocessing
     try:
         post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
-        print(post_outputs)
+        #print(post_outputs)
         title_score = sum(post_outputs[0]['labels'])/len(post_outputs[0]['labels'])
         article_score = sum(post_outputs[1]['labels'])/len(post_outputs[1]['labels'])
         score = "[{},{}]".format(title_score, article_score)
@@ -141,9 +141,9 @@ def getnews():
             ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'][:10], data['articles'][i]['content'], score, source_id, author_id))
 
             conn.commit()
-            print("article added")
+            #print("article added")
         else:
-            print("article called but was already in database")
+            #print("article called but was already in database")
     conn.close()
 
 
@@ -152,7 +152,7 @@ def articles():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     result = cur.execute('''SELECT * FROM Articles''').fetchall()
-    print(result)
+    
     conn.close()
     return jsonify(result)
 
@@ -177,11 +177,13 @@ def sourceInfo():
 @app.route('/getLg',methods=['GET'])
 def getLg():
     source = request.args['source']
+    print(source)
     date = request.args['date']
+    print(date)
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    sqlStatement='''SELECT * FROM Articles WHERE article_date_published = ? AND article_source_id = ?'''
-    result = cur.execute(sqlStatement,[source, date]).fetchall()
+    sqlStatement='''SELECT AVG(article_score) FROM Articles WHERE article_date_published =? AND article_source_id = ?'''
+    result = cur.execute(sqlStatement,[date,source]).fetchall()
     conn.close()
     return jsonify(result)
 
@@ -190,18 +192,11 @@ def getFc():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     sqlStatement='''SELECT S.source_id, S.source_name, group_concat(A.article_score, ",") FROM Sources AS S JOIN Articles AS A ON S.source_id = A.article_source_id WHERE A.article_date_published = DATE() '''
-    result = cur.execute(sqlStatement,[]).fetchall()
+    result = cur.execute(sqlStatement).fetchall()
     conn.close()
     return jsonify(result)
 
-@app.route('/getAll',methods=['GET'])
-def getAll():
-    conn = sqlite3.connect("database.db")
-    cur = conn.cursor()
-    sqlStatement='''SELECT * FROM ARTICLES '''
-    result = cur.execute(sqlStatement,[]).fetchall()
-    conn.close()
-    return jsonify(result)
+
 
 
 

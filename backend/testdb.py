@@ -11,4 +11,4 @@ cur.execute('''
             SELECT source_name FROM Sources WHERE source_name='CNN'
         ''')
 
-print(cur.fetchall())
+#print(cur.fetchall())

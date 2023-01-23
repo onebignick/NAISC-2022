@@ -75,9 +75,9 @@ def data():
 txt = "Boy dies in traffic accident"
 blob = TextBlob("Boy dies in traffic accident")
 aspects = [i for i in blob.noun_phrases]
-print(aspects)
+#print(aspects)
 inputs = [{"aspects":aspects, "sentence": txt,},{"aspects":aspects, "sentence": txt,}]
-print(inputs)
+#print(inputs)
 # processing
 processed_inputs, processed_indices = preprocessor(inputs)
 outputs = model(processed_indices)
@@ -85,6 +85,6 @@ outputs = model(processed_indices)
 # Postprocessing
 post_outputs = postprocessor(processed_inputs=processed_inputs, model_outputs=outputs)
 post_outputs['aspects'] 
-print(post_outputs)
+#print(post_outputs)
 
 app.run(host="0.0.0.0", port=5000)

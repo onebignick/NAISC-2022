@@ -45,7 +45,7 @@ export default function Desktop () {
 
     //just to check what is coming back from database
     useEffect(()=>{
-        axios("http://localhost:8000/sourceInfo")
+        axios("http://localhost:8000/articles")
         .then(res => {
             console.log(res.data)
             
@@ -67,7 +67,7 @@ export default function Desktop () {
                 {/* <div id="test">
                    {data}
                 </div> */}
-                <RadialSource />
+                
                 <Dashboard/>
                
                 

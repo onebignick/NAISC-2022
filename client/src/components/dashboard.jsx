@@ -63,38 +63,48 @@ import { useEffect } from 'react';
     //lg stands for line graphs
     
     const [lgArticles,setLgArticles]=useState([])
-    const[lgNewsOutlet,setLgNewsOutlet]=useState("")
+    const[lgNewsOutlet,setLgNewsOutlet]=useState(1)
     const[today,setToday]=useState(new Date())
 
     //the below is assuming the reader chose this news outlet
-    setLgNewsOutlet("CNBC")
+    
 
     //First do a line graph for latest 10 days for a certain news outlet
   
 
     //get the 10 latest days 
-    const rangeOfDates=[]
-    for(let i=0;i<10;i++){
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        rangeOfDates.push(date)
-    }
     
-    const formattedRangeofDates=rangeOfDates.map((date=>{
-         let formattedDate=`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-        return formattedDate
-    }))
 
     useEffect(()=>{
-        formattedRangeofDates.map((date)=>{
-            //send request to db to get articles which are from that news outlet and are on that specific date
+        const rangeOfDates=[]
+        function getDateXDaysAgo(numOfDays) {
+            const daysAgo = new Date();
+            daysAgo.setDate(daysAgo.getDate() - numOfDays);
+            let day=daysAgo.getDate()
+            
+            let month=daysAgo.getMonth()+1
+            
+            let year=daysAgo.getFullYear()
+            
+            let formattedDate=`${year}-${month}-${day}`
+          
+            return formattedDate;
+          }
+
+        for(let i=0;i<10;i++){
+            
+            rangeOfDates.push(getDateXDaysAgo(i)) 
+        }
+
+        console.log(rangeOfDates)
+        rangeOfDates.map((date)=>{
             axios({
                 method: "GET",
-                url:`http://127.0.0.1:8000/getLg`,
+                url:`http://localhost:8000/getLg`,
                 params: {
                     source: lgNewsOutlet,
                     date: date
-                },
+                }
               })
               .then((response) => {
                 const res = response.data
@@ -115,23 +125,23 @@ import { useEffect } from 'react';
                   console.log(error.response.headers)
                   }
               })
-    
-            
         })
+       
+     
     },[])
     
 
-    //after getting all the articles for the news outlet for the past 10 days,have to find the average values for each day,right now articles is an array of article from the past 10 days and there may be more then one article per day so we need find average score per day
-
+    
+    
 
 
     return (
         <>
             <h2>Trend across last 10 days</h2>
             <LineChart  data={lgArticles} >
-            <Line  dataKey="article_score"  />
+            <Line  dataKey="9"  />
             <CartesianGrid  />
-            <XAxis dataKey="article_date_published" />
+            <XAxis dataKey="5" />
             <YAxis />
             <Tooltip />
             </LineChart></>
@@ -212,12 +222,14 @@ function FunnelGraph(props){
 export default function Dashboard(props){
 
     return(
-        <>
-        {/*<LineGraph/>*/}
+        <div style={{
+            backgroundColor: "white"
+        }}>
+        <LineGraph/>
         
         <RadialSource/>
         <FunnelGraph/>
-        </> 
+        </div> 
     )
 
 }
