@@ -142,8 +142,6 @@ def getnews():
 
             conn.commit()
             #print("article added")
-        else:
-            #print("article called but was already in database")
     conn.close()
 
 
