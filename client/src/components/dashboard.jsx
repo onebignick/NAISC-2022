@@ -1,4 +1,4 @@
-import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel,LabelList} from 'recharts'
+import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBar,FunnelChart,Funnel,LabelList, PieChart} from 'recharts'
 import { useState } from 'react';
 import  axios  from 'axios';
 import RadialSource from './radialsource';
@@ -222,14 +222,11 @@ function FunnelGraph(props){
 export default function Dashboard(props){
 
     return(
-        <div style={{
-            backgroundColor: "white"
-        }}>
+        <div>
         <LineGraph/>
-        
         <RadialSource/>
         <FunnelGraph/>
-        </div> 
+        </div>
     )
 
 }

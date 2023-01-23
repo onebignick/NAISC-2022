@@ -154,6 +154,13 @@ def articles():
     conn.close()
     return jsonify(result)
 
+@app.route('/sources')
+def sources():
+    conn = sqlite3.connect("datatbase.db")
+    cur = conn.cursor()
+    result = cur.execute('''SELECT * FROM Sources''')
+    conn.close()
+    return jsonify(result)
 
 # route to get latest article
 @app.route('/get-latest', methods=['GET'])
