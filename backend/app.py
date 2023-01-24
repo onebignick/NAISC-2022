@@ -182,9 +182,9 @@ def sourceInfo():
 @app.route('/getLg',methods=['GET'])
 def getLg():
     source = request.args['source']
-    print(source)
+    
     date = request.args['date']
-    print(date)
+    
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     sqlStatement='''SELECT AVG(article_score) FROM Articles WHERE article_date_published =? AND article_source_id = ?'''

@@ -47,9 +47,7 @@ export default function RadialSource() {
 
     
     return (
-        <div style={{
-            backgroundColor: "white"
-        }}>
+        <div >
             <h1>Sources of our articles</h1>
             <RadialBarChart 
                 width={500} 

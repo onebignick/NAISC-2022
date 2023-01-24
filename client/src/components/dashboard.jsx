@@ -3,6 +3,7 @@ import { useState } from 'react';
 import  axios  from 'axios';
 import RadialSource from './radialsource';
 import { useEffect } from 'react';
+import Checklist from './checklist';
 
 //im just gonna add some example graphs here first
 
@@ -61,6 +62,13 @@ import { useEffect } from 'react';
  function LineGraph(props){
     
     //lg stands for line graphs
+
+    useEffect(()=>{
+        switch(props.selectedOption){
+            case "CNBC":
+                setLgNewsOutlet(1)
+        }
+    },[])
     
     const [lgArticles,setLgArticles]=useState([])
     const[lgNewsOutlet,setLgNewsOutlet]=useState(1)
@@ -110,9 +118,10 @@ import { useEffect } from 'react';
                 const res = response.data
                 console.log(res)
                 res.map((entry)=>{
+                    let fullObj=Object.assign({date:date},{score:entry[0]})
                     
                     setLgArticles((prev)=>{
-                        return [...prev,Object.assign({},entry)]
+                        return [...prev,fullObj]
                     })
                 console.log(lgArticles)
                 })
@@ -221,9 +230,16 @@ function FunnelGraph(props){
 
 export default function Dashboard(props){
 
+    const[selectedOption,setSelectedOption]=useState("")
+
+    const newsOutlets=["CNBC","BBC","CNN"]
+
+    
+
     return(
         <div>
-        <LineGraph/>
+        <Checklist selectedOption={selectedOption} newsOutlets={newsOutlets} setSelectedOption={setSelectedOption}/>
+        <LineGraph selectedOption={selectedOption}/>
         <RadialSource/>
         <FunnelGraph/>
         </div>
