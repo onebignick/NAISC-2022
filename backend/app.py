@@ -158,7 +158,7 @@ def articles():
 def sources():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    result = cur.execute('''SELECT Articles.article_source_id, Sources.source_name FROM Articles LEFT JOIN Sources ON Articles.article_source_id=Sources.source_id''').fetchall()
+    result = cur.execute('''SELECT S.source_id, S.source_name, COUNT(A.article_id) FROM Articles AS A LEFT JOIN Sources AS S ON A.article_source_id = S.source_id''').fetchall()
     response = jsonify(result)
     response.headers.add('Access-Control-Allow-Origin', '*')
     conn.close()
