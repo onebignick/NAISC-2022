@@ -181,16 +181,12 @@ def sourceInfo():
     conn.close()
     return jsonify(result)
 
-@app.route('/getLg',methods=['GET'])
-def getLg():
-    source = request.args['source']
-    
-    date = request.args['date']
-    
+@app.route('/getLg/<source>/<date>',methods=['GET'])
+def getLg(source, date):    
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    sqlStatement='''SELECT AVG(article_score) FROM Articles WHERE article_date_published =? AND article_source_id = ?'''
-    result = cur.execute(sqlStatement,[date,source]).fetchall()
+    sqlStatement='''SELECT group_concat(A.article_score, ",") FROM Articles AS A JOIN Sources AS S ON A.article_source_id = S.source_id WHERE A.article_date_published = ? AND S.source_name = ?'''
+    result = cur.execute(sqlStatement,[date, source]).fetchall()
     conn.close()
     return jsonify(result)
 

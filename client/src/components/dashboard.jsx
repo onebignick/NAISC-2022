@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import RadialSource from './radialsource';
 import FunnelSource from './funnelsource';
+import LineSource from './linesource';
 
 
 export default function Dashboard(props){
@@ -13,11 +14,12 @@ export default function Dashboard(props){
 
     return(
         <div style={{
-            backgroundColor: "white"
+            backgroundColor: "white",
+            color: "green"
         }}>
         <RadialSource/>
         <FunnelSource/>
-        {/* <LineSource /> */}
+        <LineSource />
         </div>
     )
 

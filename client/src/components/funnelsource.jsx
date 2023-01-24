@@ -6,7 +6,7 @@ export default function FunnelSource() {
     const [data, setData] = useState();
 
     useEffect(() => {
-        cleanData(result => setData(result));
+        cleanData().then(result => setData(result));
     }, []);
 
     return(

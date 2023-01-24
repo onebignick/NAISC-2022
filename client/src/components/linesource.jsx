@@ -6,7 +6,7 @@ export default function LineSource() {
     //lg stands for line graphs
     
     const [lgArticles,setLgArticles]=useState([])
-    const[lgNewsOutlet,setLgNewsOutlet]=useState(1)
+    const[lgNewsOutlet,setLgNewsOutlet]=useState("CNN")
     const[today,setToday]=useState(new Date())
 
     //the below is assuming the reader chose this news outlet
@@ -23,54 +23,28 @@ export default function LineSource() {
         function getDateXDaysAgo(numOfDays) {
             const daysAgo = new Date();
             daysAgo.setDate(daysAgo.getDate() - numOfDays);
-            let day=daysAgo.getDate()
-            
-            let month=daysAgo.getMonth()+1
-            
-            let year=daysAgo.getFullYear()
-            
-            let formattedDate=`${year}-${month}-${day}`
-          
-            return formattedDate;
-          }
+            return daysAgo.toISOString().slice(0, 10);
+        };
 
         for(let i=0;i<10;i++){
-            
             rangeOfDates.push(getDateXDaysAgo(i)) 
-        }
+        };
 
-        console.log(rangeOfDates)
-        rangeOfDates.map((date)=>{
-            axios({
-                method: "GET",
-                url:`http://localhost:8000/getLg`,
-                params: {
-                    source: lgNewsOutlet,
-                    date: date
-                }
-              })
-              .then((response) => {
-                const res = response.data
-                console.log(res)
-                res.map((entry)=>{
-                    
-                    setLgArticles((prev)=>{
-                        return [...prev,Object.assign({},entry)]
-                    })
-                console.log(lgArticles)
-                })
-                
+        rangeOfDates.forEach((date)=>{
+            console.log(date)
+            console.log(lgNewsOutlet)
+            axios.get(`http://localhost:8000/getLg/${lgNewsOutlet}/${date}`)
+            .then((res) => {
+                console.log("data")
+                console.log(res.data)     
             })
-              .catch((error) => {
-                if (error.response) {
-                  console.log(error.response)
-                  console.log(error.response.status)
-                  console.log(error.response.headers)
-                  }
-              })
-        })
-       
-     
+            .catch((error) => {
+                console.log(error.response)
+                console.log(error.response.status)
+                console.log(error.response.headers)
+            })
+        });
+
     },[])
     
 
@@ -82,11 +56,11 @@ export default function LineSource() {
         <>
             <h2>Trend across last 10 days</h2>
             <LineChart  data={lgArticles} >
-            <Line  dataKey="9"  />
-            <CartesianGrid  />
-            <XAxis dataKey="5" />
-            <YAxis />
-            <Tooltip />
+                <Line  dataKey="9"  />
+                <CartesianGrid  />
+                <XAxis dataKey="5" />
+                <YAxis />
+                <Tooltip />
             </LineChart></>
        
     )
