@@ -30,37 +30,21 @@ export default function LineSource() {
             rangeOfDates.push(getDateXDaysAgo(i)) 
         };
 
-        rangeOfDates.map((date)=>{
-            axios({
-                method: "GET",
-                url:`http://localhost:8000/getLg`,
-                params: {
-                    source: lgNewsOutlet,
-                    date: date
-                }
-              })
-              .then((response) => {
-                const res = response.data
-                console.log(res)
-                res.map((entry)=>{
-                    
-                    setLgArticles((prev)=>{
-                        return [...prev,Object.assign({},entry)]
-                    })
-                //console.log(lgArticles)
-                })
-                
+        rangeOfDates.forEach((date)=>{
+            console.log(date)
+            console.log(lgNewsOutlet)
+            axios.get(`http://localhost:8000/getLg/${lgNewsOutlet}/${date}`)
+            .then((res) => {
+                console.log("data")
+                console.log(res.data)     
             })
-              .catch((error) => {
-                if (error.response) {
-                  console.log(error.response)
-                  console.log(error.response.status)
-                  console.log(error.response.headers)
-                  }
-              })
-        })
-       
-     
+            .catch((error) => {
+                console.log(error.response)
+                console.log(error.response.status)
+                console.log(error.response.headers)
+            })
+        });
+
     },[])
     
 
