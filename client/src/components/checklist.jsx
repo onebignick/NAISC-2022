@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
+import './styles/dashboard.scss';
 
 export default function Checklist(props){
     let {selectedOption}=props
@@ -14,6 +15,7 @@ export default function Checklist(props){
 
     return(
         <form>
+            <h1>News Outlets</h1>
             {newsOutlets.map((entry)=>{
                 return(
                     <div>

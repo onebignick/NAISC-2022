@@ -1,0 +1,31 @@
+.dashboard{
+    color:white;
+    background-color:royalblue;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.dashboard-part-1{
+    display:flex;
+    margin-left: 10vh;
+    margin-top: 5vh;
+    flex-direction: row;
+    justify-content: space-around;
+    
+}
+
+.dashboard-part-2{
+    display:flex; 
+    margin-left: 10vh;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.fs-h1{
+    margin-bottom: 15vh;
+}
+
+h1{
+    font-size:xx-large;
+}

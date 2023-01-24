@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import './styles/dashboard.scss';
 
 export default function LineSource() {
     //lg stands for line graphs
@@ -57,7 +58,7 @@ export default function LineSource() {
 
     return (
         <>
-            <h2>Trend across last 10 days</h2>
+            <h1>Trend across last 10 days</h1>
             <LineChart  data={lgArticles} >
                 <Line  dataKey="9"  />
                 <CartesianGrid  />

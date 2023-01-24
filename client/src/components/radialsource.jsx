@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis, Legend, Tooltip } from "recharts";
 import { cleanData } from "./functools";
+import './styles/dashboard.scss';
 
 export default function RadialSource() {
     // Store source data in a state

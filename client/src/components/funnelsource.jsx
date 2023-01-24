@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tooltip, FunnelChart, Funnel, LabelList } from 'recharts';
 import { cleanData } from "./functools";
+import './styles/dashboard.scss';
 
 export default function FunnelSource() {
     const [data, setData] = useState();
@@ -11,7 +12,7 @@ export default function FunnelSource() {
 
     return(
         <div>
-            <h2>Comparison between News Outlets Today</h2>
+            <h1 className="fs-h1">Comparison between News Outlets Today</h1>
             <FunnelChart width={730} height={250}>
                 <Tooltip />
                 <Funnel
