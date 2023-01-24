@@ -67,6 +67,9 @@ export default function LineSource() {
                     })
                 }
                 //console.log(tmp[0])
+                setLgArticles((prev)=>{
+                    return[...prev,tmp[0]]
+                })
 
             })
             .catch((error) => {
@@ -74,7 +77,9 @@ export default function LineSource() {
                 console.log(error.response.status)
                 console.log(error.response.headers)
             })
+            
         });
+        
 
     },[]);
 
