@@ -22,7 +22,6 @@ async function cleanData(url) {
 
                 });
                 
-
                 const noOfArticles = raw_scores.length;
 
                 let totalHeadlineScore = 0;
@@ -40,12 +39,42 @@ async function cleanData(url) {
                 })
             })
             return tmpData
-        });
+    });
 };
 
-async function cleanDateData() {
-    return await getSourceInfo()
-}
+async function cleanDateData(url, datestr) {
+    const tmp = [];
+    await getSourceInfo(url).then(res => {
+        const raw_scores = res[0][0] != null ? res[0][0].split("],[").map(score => {
+            return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
+
+        }) : null
+        if (raw_scores != null) {
+            const noOfArticles = raw_scores.length;
+
+            let totalHeadlineScore = 0;
+            let totalContentScore = 0;
+            raw_scores.forEach(score => {
+                totalHeadlineScore += score[0];
+                totalContentScore += score[1];
+            });
+            const avgHeadlineScore = totalHeadlineScore / noOfArticles;
+            const avgContentScore = totalContentScore / noOfArticles;
+            const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
+            tmp.push({
+                date: datestr,
+                value: clickbaitIndex,
+            })
+        } else {
+            tmp.push({
+                date: datestr,
+                value: 0,
+            })
+        }
+    });
+    return tmp;
+
+};
 
 
-export { getSourceInfo, cleanData };
+export { getSourceInfo, cleanData, cleanDateData };

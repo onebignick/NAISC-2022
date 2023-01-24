@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import './styles/dashboard.scss';
+import { cleanDateData } from "./functools";
 
 export default function LineSource() {
     //lg stands for line graphs
@@ -65,11 +66,7 @@ export default function LineSource() {
                         value: 0,
                     })
                 }
-                //console.log(tmp)
-                setLgArticles((prev)=>{
-                    return [...prev,tmp[0]]
-                })
-
+                //console.log(tmp[0])
 
             })
             .catch((error) => {
@@ -77,9 +74,7 @@ export default function LineSource() {
                 console.log(error.response.status)
                 console.log(error.response.headers)
             })
-            
-        }
-        );
+        });
 
     },[]);
 
