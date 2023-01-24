@@ -31,12 +31,15 @@ export default function LineSource() {
         };
 
         rangeOfDates.forEach((date)=>{
-            console.log(date)
-            console.log(lgNewsOutlet)
-            axios.get(`http://localhost:8000/getLg/${lgNewsOutlet}/${date}`)
+            const url = `http://localhost:8000/getLg/${lgNewsOutlet}/${date}`;
+            axios.get(url)
             .then((res) => {
-                console.log("data")
-                console.log(res.data)     
+                const raw_scores = res.data[0][0] != null ? res.data[0][0].split("],[").map(score => {
+                    return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
+
+                }) : null
+                console.log(date)
+                console.log(raw_scores)
             })
             .catch((error) => {
                 console.log(error.response)
