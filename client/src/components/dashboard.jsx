@@ -22,7 +22,7 @@ export default function Dashboard(props){
             </div>
             <div className='dashboard-part-2'>
                 <Checklist selectedOption={selectedOption} setSelectedOption={setSelectedOption} newsOutlets={newsOutlets}/>
-                <LineSource />
+                <LineSource  />
             </div>
         </div>
     )

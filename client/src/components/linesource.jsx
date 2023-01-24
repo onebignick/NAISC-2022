@@ -12,12 +12,6 @@ export default function LineSource() {
     const[today,setToday]=useState(new Date())
     const [data, setData] = useState();
 
-    //the below is assuming the reader chose this news outlet
-    
-
-    //First do a line graph for latest 10 days for a certain news outlet
-  
-
     //get the 10 latest days 
     
 
@@ -82,18 +76,19 @@ export default function LineSource() {
         
 
     },[]);
-
+    //console.log(lgArticles)
     return (
-        <>
+        <div>
             <h1>Trend across last 10 days</h1>
             <LineChart  width={730} height={250} data={lgArticles}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }} >
                 <Line  dataKey="value"  />
                 <CartesianGrid  />
-                <XAxis dataKey="date" />
-                <YAxis />
+                <XAxis dataKey="date" tick={{stroke: 'white', strokeWidth: 0.7}} />
+                <YAxis  tick={{stroke: 'white', strokeWidth: 0.7}}/>
                 <Tooltip />
-            </LineChart></>
+            </LineChart>
+        </div>
        
     )
 
