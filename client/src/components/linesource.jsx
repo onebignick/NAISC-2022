@@ -6,7 +6,7 @@ export default function LineSource() {
     //lg stands for line graphs
     
     const [lgArticles,setLgArticles]=useState([])
-    const[lgNewsOutlet,setLgNewsOutlet]=useState(1)
+    const[lgNewsOutlet,setLgNewsOutlet]=useState("CNN")
     const[today,setToday]=useState(new Date())
 
     //the below is assuming the reader chose this news outlet
@@ -82,11 +82,11 @@ export default function LineSource() {
         <>
             <h2>Trend across last 10 days</h2>
             <LineChart  data={lgArticles} >
-            <Line  dataKey="9"  />
-            <CartesianGrid  />
-            <XAxis dataKey="5" />
-            <YAxis />
-            <Tooltip />
+                <Line  dataKey="9"  />
+                <CartesianGrid  />
+                <XAxis dataKey="5" />
+                <YAxis />
+                <Tooltip />
             </LineChart></>
        
     )
