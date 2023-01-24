@@ -1,9 +1,12 @@
 .dashboard{
     color:white;
-    background-color:royalblue;
+    background-color:#333333;
     display: flex;
     flex-direction: column;
+}
 
+.text-color-class {
+    color: white;
 }
 
 .dashboard-part-1{

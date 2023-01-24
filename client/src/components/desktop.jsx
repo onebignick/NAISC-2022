@@ -13,16 +13,6 @@ import './styles/desktop.scss';
 
 export default function Desktop () {
     const [isSidebarEnabled, setIsSidebarEnabled] = useState(false);
-    
-    useEffect(()=>{
-        axios("http://localhost:8000/articles")
-        .then(res => {
-            console.log(res.data)
-            
-        })
-        .catch(err => console.log(err.message))
-    })
-    
 
     return (
         <div className="desktop">
