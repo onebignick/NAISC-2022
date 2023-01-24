@@ -2,6 +2,8 @@ import {LineChart,Line,CartesianGrid,XAxis,YAxis,Tooltip,RadialBarChart,RadialBa
 import { useState } from 'react';
 import  axios  from 'axios';
 import RadialSource from './radialsource';
+import FunnelSource from './funnelsource';
+import LineSource from './linesource';
 import { useEffect } from 'react';
 
 //im just gonna add some example graphs here first
@@ -58,174 +60,176 @@ import { useEffect } from 'react';
 //         FOREIGN KEY (article_author_id) REFERENCES Authors(author_id)
 
 //create the line graph first
- function LineGraph(props){
+//  function LineGraph(props){
     
-    //lg stands for line graphs
+//     //lg stands for line graphs
     
-    const [lgArticles,setLgArticles]=useState([])
-    const[lgNewsOutlet,setLgNewsOutlet]=useState(1)
-    const[today,setToday]=useState(new Date())
+//     const [lgArticles,setLgArticles]=useState([])
+//     const[lgNewsOutlet,setLgNewsOutlet]=useState(1)
+//     const[today,setToday]=useState(new Date())
 
-    //the below is assuming the reader chose this news outlet
+//     //the below is assuming the reader chose this news outlet
     
 
-    //First do a line graph for latest 10 days for a certain news outlet
+//     //First do a line graph for latest 10 days for a certain news outlet
   
 
-    //get the 10 latest days 
+//     //get the 10 latest days 
     
 
-    useEffect(()=>{
-        const rangeOfDates=[]
-        function getDateXDaysAgo(numOfDays) {
-            const daysAgo = new Date();
-            daysAgo.setDate(daysAgo.getDate() - numOfDays);
-            let day=daysAgo.getDate()
+//     useEffect(()=>{
+//         const rangeOfDates=[]
+//         function getDateXDaysAgo(numOfDays) {
+//             const daysAgo = new Date();
+//             daysAgo.setDate(daysAgo.getDate() - numOfDays);
+//             let day=daysAgo.getDate()
             
-            let month=daysAgo.getMonth()+1
+//             let month=daysAgo.getMonth()+1
             
-            let year=daysAgo.getFullYear()
+//             let year=daysAgo.getFullYear()
             
-            let formattedDate=`${year}-${month}-${day}`
+//             let formattedDate=`${year}-${month}-${day}`
           
-            return formattedDate;
-          }
+//             return formattedDate;
+//           }
 
-        for(let i=0;i<10;i++){
+//         for(let i=0;i<10;i++){
             
-            rangeOfDates.push(getDateXDaysAgo(i)) 
-        }
+//             rangeOfDates.push(getDateXDaysAgo(i)) 
+//         }
 
-        console.log(rangeOfDates)
-        rangeOfDates.map((date)=>{
-            axios({
-                method: "GET",
-                url:`http://localhost:8000/getLg`,
-                params: {
-                    source: lgNewsOutlet,
-                    date: date
-                }
-              })
-              .then((response) => {
-                const res = response.data
-                console.log(res)
-                res.map((entry)=>{
+//         console.log(rangeOfDates)
+//         rangeOfDates.map((date)=>{
+//             axios({
+//                 method: "GET",
+//                 url:`http://localhost:8000/getLg`,
+//                 params: {
+//                     source: lgNewsOutlet,
+//                     date: date
+//                 }
+//               })
+//               .then((response) => {
+//                 const res = response.data
+//                 console.log(res)
+//                 res.map((entry)=>{
                     
-                    setLgArticles((prev)=>{
-                        return [...prev,Object.assign({},entry)]
-                    })
-                console.log(lgArticles)
-                })
+//                     setLgArticles((prev)=>{
+//                         return [...prev,Object.assign({},entry)]
+//                     })
+//                 console.log(lgArticles)
+//                 })
                 
-            })
-              .catch((error) => {
-                if (error.response) {
-                  console.log(error.response)
-                  console.log(error.response.status)
-                  console.log(error.response.headers)
-                  }
-              })
-        })
+//             })
+//               .catch((error) => {
+//                 if (error.response) {
+//                   console.log(error.response)
+//                   console.log(error.response.status)
+//                   console.log(error.response.headers)
+//                   }
+//               })
+//         })
        
      
-    },[])
+//     },[])
     
 
     
     
 
 
-    return (
-        <>
-            <h2>Trend across last 10 days</h2>
-            <LineChart  data={lgArticles} >
-            <Line  dataKey="9"  />
-            <CartesianGrid  />
-            <XAxis dataKey="5" />
-            <YAxis />
-            <Tooltip />
-            </LineChart></>
+//     return (
+//         <>
+//             <h2>Trend across last 10 days</h2>
+//             <LineChart  data={lgArticles} >
+//             <Line  dataKey="9"  />
+//             <CartesianGrid  />
+//             <XAxis dataKey="5" />
+//             <YAxis />
+//             <Tooltip />
+//             </LineChart></>
        
-    )
+//     )
 
     
-}
+// }
 
 
-function FunnelGraph(props){
+// function FunnelGraph(props){
 
-    const[today,setToday]=useState(new Date())
-    const [fcArticles,setFcArticles]=useState([])
-    useEffect(()=>{
-        axios({
-            method: "GET",
-            url:`http://127.0.0.1:8000/getFc`
-          })
-          .then((response) => {
-            let tmpData=[]
-            response.forEach(row => {
-                const raw_scores = row[2].split("],[").map(score => {
-                    return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
+//     const[today,setToday]=useState(new Date())
+//     const [fcArticles,setFcArticles]=useState([])
+//     useEffect(()=>{
+//         axios({
+//             method: "GET",
+//             url:`http://127.0.0.1:8000/getFc`
+//           })
+//           .then((response) => {
+//             let tmpData=[]
+//             response.forEach(row => {
+//                 const raw_scores = row[2].split("],[").map(score => {
+//                     return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
     
-                });
-                console.log(raw_scores)
+//                 });
+//                 console.log(raw_scores)
     
-                const noOfArticles = raw_scores.length;
+//                 const noOfArticles = raw_scores.length;
     
-                let totalHeadlineScore = 0;
-                let totalContentScore = 0;
-                raw_scores.forEach(score => {
-                    totalHeadlineScore += score[0];
-                    totalContentScore += score[1];
-                });
-                const avgHeadlineScore = totalHeadlineScore / noOfArticles;
-                const avgContentScore = totalContentScore / noOfArticles;
-                const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
-                tmpData.push({
-                    name: row[1],
-                    value: clickbaitIndex,
-                })
-            })
-            setFcArticles(tmpData)
+//                 let totalHeadlineScore = 0;
+//                 let totalContentScore = 0;
+//                 raw_scores.forEach(score => {
+//                     totalHeadlineScore += score[0];
+//                     totalContentScore += score[1];
+//                 });
+//                 const avgHeadlineScore = totalHeadlineScore / noOfArticles;
+//                 const avgContentScore = totalContentScore / noOfArticles;
+//                 const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
+//                 tmpData.push({
+//                     name: row[1],
+//                     value: clickbaitIndex,
+//                 })
+//             })
+//             setFcArticles(tmpData)
     
             
-        })
-          .catch((error) => {
-            if (error.response) {
-              console.log(error.response)
-              console.log(error.response.status)
-              console.log(error.response.headers)
-              }
-          })
-    },[])
+//         })
+//           .catch((error) => {
+//             if (error.response) {
+//               console.log(error.response)
+//               console.log(error.response.status)
+//               console.log(error.response.headers)
+//               }
+//           })
+//     },[])
     
 
 
-    return(
-        <>
-            <h2>Comparison between News Outlets Today</h2>
-            <FunnelChart >
-                <Tooltip />
-                <Funnel
-                    dataKey="value"
-                    data={fcArticles}
-                    isAnimationActive
-                >
-                    <LabelList  dataKey="name" />
-                </Funnel>
-            </FunnelChart>
-        </>
+//     return(
+//         <>
+//             <h2>Comparison between News Outlets Today</h2>
+//             <FunnelChart >
+//                 <Tooltip />
+//                 <Funnel
+//                     dataKey="value"
+//                     data={fcArticles}
+//                     isAnimationActive
+//                 >
+//                     <LabelList  dataKey="name" />
+//                 </Funnel>
+//             </FunnelChart>
+//         </>
         
-    )
-}
+//     )
+// }
 
 export default function Dashboard(props){
 
     return(
-        <div>
-        <LineGraph/>
+        <div style={{
+            backgroundColor: "white"
+        }}>
         <RadialSource/>
-        <FunnelGraph/>
+        <FunnelSource/>
+        {/* <LineSource /> */}
         </div>
     )
 
