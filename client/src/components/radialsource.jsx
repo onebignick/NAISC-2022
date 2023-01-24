@@ -1,48 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis, Legend, Tooltip } from "recharts";
-import axios from "axios";
-
-async function getSourceInfo() {
-    return await axios("http://localhost:8000/sourceInfo")
-    .then(res => {
-        return res.data
-    })
-    .catch(err => console.log(err.message))
-};
+import { cleanData } from "./functools";
 
 export default function RadialSource() {
     // Store source data in a state
     const [data, setData] = useState();
 
     useEffect(() => {
-        getSourceInfo().then(result => {
-            const tmpData = [];
-            
-            result.forEach(row => {
-                const raw_scores = row[2].split("],[").map(score => {
-                    return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
-
-                });
-                
-
-                const noOfArticles = raw_scores.length;
-
-                let totalHeadlineScore = 0;
-                let totalContentScore = 0;
-                raw_scores.forEach(score => {
-                    totalHeadlineScore += score[0];
-                    totalContentScore += score[1];
-                });
-                const avgHeadlineScore = totalHeadlineScore / noOfArticles;
-                const avgContentScore = totalContentScore / noOfArticles;
-                const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
-                tmpData.push({
-                    name: row[1],
-                    value: clickbaitIndex,
-                })
-            })
-            setData(tmpData);
-        });
+        cleanData(result => setData(result));
     }, []);
     
     return (
