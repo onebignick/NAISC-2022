@@ -23,23 +23,13 @@ export default function LineSource() {
         function getDateXDaysAgo(numOfDays) {
             const daysAgo = new Date();
             daysAgo.setDate(daysAgo.getDate() - numOfDays);
-            let day=daysAgo.getDate()
-            
-            let month=daysAgo.getMonth()+1
-            
-            let year=daysAgo.getFullYear()
-            
-            let formattedDate=`${year}-${month}-${day}`
-          
-            return formattedDate;
-          }
+            return daysAgo.toISOString().slice(0, 10);
+        };
 
         for(let i=0;i<10;i++){
-            
             rangeOfDates.push(getDateXDaysAgo(i)) 
-        }
+        };
 
-        console.log(rangeOfDates)
         rangeOfDates.map((date)=>{
             axios({
                 method: "GET",
@@ -57,7 +47,7 @@ export default function LineSource() {
                     setLgArticles((prev)=>{
                         return [...prev,Object.assign({},entry)]
                     })
-                console.log(lgArticles)
+                //console.log(lgArticles)
                 })
                 
             })
