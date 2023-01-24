@@ -8,13 +8,12 @@ async function getSourceInfo(url) {
     .catch(err => {
         console.log(err.message);
         console.log(err.response);
-        console.log(err.response.status);
         console.log(err.response.headers);
     });
 };
 
-async function cleanData() {
-    return await getSourceInfo("http://localhost:8000/getFc").then(result => {
+async function cleanData(url) {
+    return await getSourceInfo(url).then(result => {
             const tmpData = [];
             
             result.forEach(row => {
@@ -43,6 +42,10 @@ async function cleanData() {
             return tmpData
         });
 };
+
+async function cleanDateData() {
+    return await getSourceInfo()
+}
 
 
 export { getSourceInfo, cleanData };

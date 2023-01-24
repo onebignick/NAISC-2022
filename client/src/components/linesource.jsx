@@ -9,6 +9,7 @@ export default function LineSource() {
     const [lgArticles,setLgArticles]=useState([])
     const[lgNewsOutlet,setLgNewsOutlet]=useState("CNN")
     const[today,setToday]=useState(new Date())
+    const [data, setData] = useState();
 
     //the below is assuming the reader chose this news outlet
     
@@ -31,7 +32,9 @@ export default function LineSource() {
             rangeOfDates.push(getDateXDaysAgo(i)) 
         };
 
+  
         rangeOfDates.forEach((date)=>{
+            const tmp = [];
             const url = `http://localhost:8000/getLg/${lgNewsOutlet}/${date}`;
             axios.get(url)
             .then((res) => {
@@ -39,8 +42,31 @@ export default function LineSource() {
                     return score.replace(/^\[|\]$/, "").split(",").map(score => parseFloat(score));
 
                 }) : null
-                console.log(date)
-                console.log(raw_scores)
+
+                if (raw_scores != null) {
+                    const noOfArticles = raw_scores.length;
+
+                    let totalHeadlineScore = 0;
+                    let totalContentScore = 0;
+                    raw_scores.forEach(score => {
+                        totalHeadlineScore += score[0];
+                        totalContentScore += score[1];
+                    });
+                    const avgHeadlineScore = totalHeadlineScore / noOfArticles;
+                    const avgContentScore = totalContentScore / noOfArticles;
+                    const clickbaitIndex = Math.abs(avgHeadlineScore - avgContentScore).toFixed(2);
+                    tmp.push({
+                        date: date,
+                        value: clickbaitIndex,
+                    })
+                } else {
+                    tmp.push({
+                        date: date,
+                        value: 0,
+                    })
+                }
+                //console.log(tmp[0])
+
             })
             .catch((error) => {
                 console.log(error.response)
@@ -49,20 +75,16 @@ export default function LineSource() {
             })
         });
 
-    },[])
-    
-
-    
-    
-
+    },[]);
 
     return (
         <>
             <h1>Trend across last 10 days</h1>
-            <LineChart  data={lgArticles} >
-                <Line  dataKey="9"  />
+            <LineChart  width={730} height={250} data={data}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }} >
+                <Line  dataKey="value"  />
                 <CartesianGrid  />
-                <XAxis dataKey="5" />
+                <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
             </LineChart></>

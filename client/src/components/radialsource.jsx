@@ -8,7 +8,10 @@ export default function RadialSource() {
     const [data, setData] = useState();
 
     useEffect(() => {
-        cleanData().then(result => setData(result));
+        cleanData("http://localhost:8000/sourceInfo").then(result => {
+            console.log(result)
+            setData(result)
+        });
     }, []);
 
     return (

@@ -7,7 +7,7 @@ export default function FunnelSource() {
     const [data, setData] = useState();
 
     useEffect(() => {
-        cleanData().then(result => setData(result));
+        cleanData("http://localhost:8000/getFc").then(result => setData(result));
     }, []);
 
     return(
