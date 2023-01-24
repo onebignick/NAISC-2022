@@ -182,9 +182,9 @@ def sourceInfo():
 @app.route('/getLg',methods=['GET'])
 def getLg():
     source = request.args['source']
-    print(source)
+    
     date = request.args['date']
-    print(date)
+    
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     sqlStatement='''SELECT * FROM Articles AS A JOIN Sources AS S ON A.article_source_id = S.source_id WHERE A.article_date_published = ? AND S.source_name = ?'''
