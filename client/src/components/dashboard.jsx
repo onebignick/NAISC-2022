@@ -2,6 +2,7 @@ import { useState } from 'react';
 import RadialSource from './radialsource';
 import FunnelSource from './funnelsource';
 import LineSource from './linesource';
+import Checklist from './checklist';
 
 
 export default function Dashboard(props){
@@ -19,6 +20,7 @@ export default function Dashboard(props){
         }}>
         <RadialSource/>
         <FunnelSource/>
+        <Checklist selectedOption={selectedOption} setSelectedOption={setSelectedOption} newsOutlets={newsOutlets}/>
         <LineSource />
         </div>
     )
