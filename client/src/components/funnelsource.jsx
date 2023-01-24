@@ -11,7 +11,7 @@ export default function FunnelSource() {
 
     return(
         <div>
-            <h2>Comparison between News Outlets Today</h2>
+            <h2 style={{color: "green"}}>Comparison between News Outlets Today</h2>
             <FunnelChart width={730} height={250}>
                 <Tooltip />
                 <Funnel

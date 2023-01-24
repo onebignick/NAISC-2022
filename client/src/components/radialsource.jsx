@@ -12,7 +12,7 @@ export default function RadialSource() {
 
     return (
         <div>
-            <h1>Sources of our articles</h1>
+            <h1 style={{color: "green"}}>Sources of our articles</h1>
             <RadialBarChart 
                 width={500} 
                 height={500} 
