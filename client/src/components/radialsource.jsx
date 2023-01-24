@@ -44,7 +44,6 @@ export default function RadialSource() {
             setData(tmpData);
         });
     }, []);
-
     
     return (
         <div>
