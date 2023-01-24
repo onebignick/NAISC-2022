@@ -156,11 +156,13 @@ def articles():
 
 @app.route('/sources')
 def sources():
-    conn = sqlite3.connect("datatbase.db")
+    conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    result = cur.execute('''SELECT * FROM Sources''')
+    result = cur.execute('''SELECT Articles.article_source_id, Sources.source_name FROM Articles LEFT JOIN Sources ON Articles.article_source_id=Sources.source_id''').fetchall()
+    response = jsonify(result)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     conn.close()
-    return jsonify(result)
+    return response
 
 # route to get latest article
 @app.route('/get-latest', methods=['GET'])
