@@ -65,7 +65,11 @@ export default function LineSource() {
                         value: 0,
                     })
                 }
-                //console.log(tmp[0])
+                //console.log(tmp)
+                setLgArticles((prev)=>{
+                    return [...prev,tmp[0]]
+                })
+
 
             })
             .catch((error) => {
@@ -73,14 +77,16 @@ export default function LineSource() {
                 console.log(error.response.status)
                 console.log(error.response.headers)
             })
-        });
+            
+        }
+        );
 
     },[]);
 
     return (
         <>
             <h1>Trend across last 10 days</h1>
-            <LineChart  width={730} height={250} data={data}
+            <LineChart  width={730} height={250} data={lgArticles}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }} >
                 <Line  dataKey="value"  />
                 <CartesianGrid  />
