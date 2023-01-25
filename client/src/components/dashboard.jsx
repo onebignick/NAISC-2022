@@ -15,6 +15,7 @@ export default function Dashboard(props){
 
     const [data, setData] = useState();
     
+    // request source data
     useEffect(()=>{
         axios("http://localhost:8000/sources")
         .then(res => {
@@ -30,7 +31,6 @@ export default function Dashboard(props){
         .catch(err => console.log(err.message))
     }, [])
     
-
     return(
         <div className='dashboard'>
             <div className='article-sources'>
