@@ -72,7 +72,7 @@ def generate_score(title, desc):
         #print(score)
         return score
     except Exception as e:
-        return -2
+        return (-2, -2)
 
 # function to get news
 def getnews():
@@ -133,12 +133,16 @@ def getnews():
             source_id = conn.execute('''SELECT source_id FROM Sources WHERE source_name="{}"'''.format(data['articles'][i]['source']['name'])).fetchone()[0]
             author_id = conn.execute('''SELECT author_id FROM Authors WHERE author_name="{}"'''.format(data['articles'][i]['author'])).fetchone()[0]
             score = generate_score(data['articles'][i]['title'],data['articles'][i]['description'])
-
+            print('|')
+            print('|')
+            print(score)
+            print('|')
+            print('|')
             # Adding of article into db
             cur.execute('''
-                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_score, article_source_id, article_author_id) 
-                VALUES  (?,?,?,?,?,?,?,?,?)
-            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'][:10], data['articles'][i]['content'], score, source_id, author_id))
+                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_title_score, article_description_score, article_source_id, article_author_id) 
+                VALUES  (?,?,?,?,?,?,?,?,?,?)
+            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'][:10], data['articles'][i]['content'], score[0], score[1], source_id, author_id))
 
             conn.commit()
             #print("article added")
