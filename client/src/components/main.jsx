@@ -34,7 +34,31 @@ const styles = {
         width:"40%"
     }
 }
+function ListItem(article, handleLink) {
+    return (
+        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1px solid #66ff70': '1px solid #ff5d52'}} raised={false}>
+                    <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}} 
+                    onClick={()=>{handleLink(article)}}>
+                        <CardMedia
+                        component="img"
+                        height="150"
+                        style={{aspectRatio:1,maxWidth:150}}
+                        image= {article['imageurl']}
+                        alt="image"
+                        />
+                        <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {article['title']}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {shortenString(article['description'])}
+                        </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
 
+    )
+}
 export default function Main() {
     const [searchTerm, setSearchTerm] = useState("")
     const [articles, setArticles] = useState([])
@@ -72,32 +96,13 @@ export default function Main() {
             <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
             onKeyDown={handleKeypress} style={styles.input}/>
-            <p>Graph here</p>
-            {articles ? 
-            (<Box>
-                {articles.map((article) => {
-                 <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1px solid #66ff70': '1px solid #ff5d52'}} raised={false}>
-                    <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}} 
-                    onClick={()=>{handleLink(article)}}>
-                        <CardMedia
-                        component="img"
-                        height="150"
-                        style={{aspectRatio:1,maxWidth:150}}
-                        image= {article['imageurl']}
-                        alt="image"
-                        />
-                        <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {article['title']}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {shortenString(article['description'])}
-                        </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                </Card> })}
+            <p>graph here</p>
+
+            <Box>
+                {articles.map(article => { <ListItem article={article} handleLink={handleLink}/>
+                  })}
                
-            </Box>) : <h1>Error</h1>}
+            </Box>
                     <Modal
                 open={modalVisible}
                 onClose={() => {setModalVisible(false)}}
