@@ -42,7 +42,9 @@ const styles = {
     }
 }
 function ListItem({article, handleLink}) {
+    console.log(article)
     console.log(article.score)
+    let num=(article['score']*1-article['otherscore']*1).toFixed(2)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false}>
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
@@ -60,8 +62,11 @@ function ListItem({article, handleLink}) {
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {shortenString(article['description'])}
+                            
                         </Typography>
+                        
                         </CardContent>
+                        {num}
                     </CardActionArea>
                 </Card>
 
