@@ -32,12 +32,17 @@ const styles = {
     },
     input:{
         width:"40%"
+    },
+    modal:{
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'center'
     }
 }
 function ListItem({article, handleLink}) {
     console.log(article.score)
     return (
-        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1px solid #ff5d52': '1px solid #66ff70'}} raised={false}>
+        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false}>
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
                     onClick={()=>{handleLink(article)}}>
                         <CardMedia
@@ -125,7 +130,7 @@ export default function Main() {
             >
                 <Box sx={styles.modal}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                    modalContent.title
+                    {modalContent.title}
                 </Typography>
                 <Box
                     component="img"
@@ -139,7 +144,7 @@ export default function Main() {
                     src= {modalContent.imageurl}
                 />
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    modalContent['content']
+                    {modalContent['content']}
                 </Typography>
                 </Box>
             </Modal>
