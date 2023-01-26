@@ -96,7 +96,7 @@ export default function Main() {
                     </CardActionArea>
                 </Card> })}
                
-            </Box>) : null}
+            </Box>) : <h1>Error</h1>}
                     <Modal
                 open={modalVisible}
                 onClose={() => {setModalVisible(false)}}
