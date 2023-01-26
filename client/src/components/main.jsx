@@ -35,6 +35,7 @@ const styles = {
     }
 }
 function ListItem({article, handleLink}) {
+    console.log(article.score)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1px solid #ff5d52': '1px solid #66ff70'}} raised={false}>
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
