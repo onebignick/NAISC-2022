@@ -59,8 +59,9 @@ function ListItem(article, handleLink) {
 
     )
 }
-function Articles(articles, handleLink){
+function Articles({articles, handleLink}){
     useEffect(()=>{},[articles])
+    console.log(articles)
     if (articles !== []) {
         return (
             <Box>
