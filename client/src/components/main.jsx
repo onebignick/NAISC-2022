@@ -48,7 +48,7 @@ function ListItem({article, handleLink}) {
     let num=(article['score']*1-article['otherscore']*1).toFixed(2)
     console.log(num)
     return (
-        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false}>
+        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
                     onClick={()=>{handleLink(article)}}>
                         <CardMedia
