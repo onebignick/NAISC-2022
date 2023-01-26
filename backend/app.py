@@ -149,12 +149,12 @@ def getnews():
     conn.close()
 
 def arraytodict(article : list):
-    if len(article) != 9:
+    if len(article) != 10:
         print('input is missing fields', article)
         return {}
     else:
-        labels = ['title', 'description', 'url', 'imageurl','date', 'content', 'score', 'sourceid', 'authorid']
-        results = {labels[i] : article[i] for i in range(9)}
+        labels = ['index','title', 'description', 'url', 'imageurl','date', 'content', 'score', 'sourceid', 'authorid']
+        results = {labels[i] : article[i] for i in range(10)}
         return results 
 
 
