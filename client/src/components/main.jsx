@@ -9,6 +9,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
+import './styles/main.scss'
 
 function shortenString(description) {
     let words = ''
@@ -42,9 +43,10 @@ const styles = {
     }
 }
 function ListItem({article, handleLink}) {
-    console.log(article)
-    console.log(article.score)
+    
+    
     let num=(article['score']*1-article['otherscore']*1).toFixed(2)
+    console.log(num)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false}>
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
@@ -66,7 +68,7 @@ function ListItem({article, handleLink}) {
                         </Typography>
                         
                         </CardContent>
-                        {num}
+                        <div className={num>0?"positive":"negative"}>{num}</div>
                     </CardActionArea>
                 </Card>
 
