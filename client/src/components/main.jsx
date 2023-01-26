@@ -12,6 +12,7 @@ import { CardActionArea } from '@mui/material';
 
 function shortenString(description) {
     let words = ''
+
     if (description.length > 20) {
         words = description.slice(0,20) + "..."
     } else {
@@ -82,7 +83,7 @@ export default function Main() {
                         component="img"
                         height="150"
                         style={{aspectRatio:1,maxWidth:150}}
-                        image= {article[4]}
+                        image= {article['imageurl']}
                         alt="image"
                         />
                         <CardContent>
@@ -90,7 +91,7 @@ export default function Main() {
                             {article['title']}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {shortenString(article[2])}
+                            {shortenString(article['description'])}
                         </Typography>
                         </CardContent>
                     </CardActionArea>
