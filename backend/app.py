@@ -166,7 +166,7 @@ def articles():
     
     conn.close()
     results = [arraytodict(i) for i in result]
-    return jsonify(result)
+    return jsonify(results)
 
 @app.route('/sources')
 def sources():
