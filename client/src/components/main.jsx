@@ -75,14 +75,14 @@ export default function Main() {
             {articles ? 
             (<Box>
                 {articles.map((article) => {
-                 <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article.score[1] < 0 ? '1px solid #66ff70': '1px solid #ff5d52'}} raised={false}>
+                 <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article[9] < 0 ? '1px solid #66ff70': '1px solid #ff5d52'}} raised={false}>
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}} 
                     onClick={()=>{handleLink(article)}}>
                         <CardMedia
                         component="img"
                         height="150"
                         style={{aspectRatio:1,maxWidth:150}}
-                        image= {article['imageurl']}
+                        image= {article[4]}
                         alt="image"
                         />
                         <CardContent>
@@ -90,7 +90,7 @@ export default function Main() {
                             {article['title']}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {shortenString(article['description'])}
+                            {shortenString(article[2])}
                         </Typography>
                         </CardContent>
                     </CardActionArea>
