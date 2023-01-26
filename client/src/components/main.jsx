@@ -36,7 +36,9 @@ const styles = {
     modal:{
         display:'flex',
         flexDirection:'column',
-        justifyContent:'center'
+        alignItems:'center',
+        paddingTop:"5em",
+        backgroundColor:'white'
     }
 }
 function ListItem({article, handleLink}) {
