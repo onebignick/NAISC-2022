@@ -153,7 +153,7 @@ def arraytodict(article : list):
         print('input is missing fields', article)
         return {}
     else:
-        labels = ['index','title', 'description', 'url', 'imageurl','date', 'content', 'score', 'otherscore', 'sourceid', 'authorid']
+        labels = ['index','title', 'description', 'url', 'imageurl','date', 'content', 'sourceid', 'authorid', 'score', 'otherscore']
         results = {labels[i] : article[i] for i in range(11)}
         return results 
 
