@@ -28,8 +28,17 @@ cur.execute('''
         article_author_id INTEGER,
         article_title_score DOUBLE,
         article_description_score DOUBLE,
+        article_votes INTEGER,
         FOREIGN KEY (article_source_id) REFERENCES Sources(source_id),
         FOREIGN KEY (article_author_id) REFERENCES Authors(author_id)
+    )
+''')
+
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS Comments(
+        comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        article_id INTEGER,
+        FOREIGN KEY (article_id) REFERENCES Articles(article_id)
     )
 ''')
 conn.close()
