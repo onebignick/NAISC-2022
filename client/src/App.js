@@ -1,4 +1,5 @@
 import Desktop from './components/desktop';
+import Main from './components/main'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -7,7 +8,7 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Desktop />,
+    element: <Main />,
   },
   {
     path: "*",

@@ -68,10 +68,10 @@ def generate_score(title, desc):
         #print(post_outputs)
         title_score = sum(post_outputs[0]['labels'])/len(post_outputs[0]['labels'])
         article_score = sum(post_outputs[1]['labels'])/len(post_outputs[1]['labels'])
-        score = "[{},{}]".format(title_score, article_score)
+        score = (title_score, article_score)
         #print(score)
         return score
-    except:
+    except Exception as e:
         return -2
 
 # function to get news
@@ -144,6 +144,15 @@ def getnews():
             #print("article added")
     conn.close()
 
+def arraytodict(article : list):
+    if len(article) != 9:
+        print('input is missing fields', article)
+        return {}
+    else:
+        labels = ['title', 'description', 'url', 'imageurl','date', 'content', 'score', 'sourceid', 'authorid']
+        results = {labels[i] : article[i] for i in range(9)}
+        return results 
+
 
 @app.route('/articles')
 def articles():
@@ -152,6 +161,7 @@ def articles():
     result = cur.execute('''SELECT * FROM Articles''').fetchall()
     
     conn.close()
+    results = [arraytodict(i) for i in result]
     return jsonify(result)
 
 @app.route('/sources')
