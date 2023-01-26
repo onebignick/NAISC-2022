@@ -9,6 +9,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
+import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import './styles/main.scss'
 
 function shortenString(description) {
@@ -68,6 +71,16 @@ function ListItem({article, handleLink}) {
                         </Typography>
                         
                         </CardContent>
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '2rem',
+                            margin: '0 1rem',
+                        }}>
+                            <ThumbUpRoundedIcon />
+                            <ThumbDownAltRoundedIcon />
+                            <MessageRoundedIcon />
+                        </Box>
                         <div className={num>0?"positive":"negative"}>{num}</div>
                     </CardActionArea>
                 </Card>
