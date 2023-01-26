@@ -59,6 +59,22 @@ function ListItem(article, handleLink) {
 
     )
 }
+function Articles(articles, handleLink){
+    useEffect(()=>{},[articles])
+    if (articles !== []) {
+        return (
+            <Box>
+                {articles.map(article => { <ListItem article={article} handleLink={handleLink}/>
+                  })}
+               
+            </Box>
+            )
+        
+    } else {
+        return null
+     }
+}
+
 export default function Main() {
     const [searchTerm, setSearchTerm] = useState("")
     const [articles, setArticles] = useState([])
@@ -97,12 +113,8 @@ export default function Main() {
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
             onKeyDown={handleKeypress} style={styles.input}/>
             <p>graph here</p>
-
-            <Box>
-                {articles.map(article => { <ListItem article={article} handleLink={handleLink}/>
-                  })}
-               
-            </Box>
+            <Articles articles={articles} handleLink={handleLink}/>
+            
                     <Modal
                 open={modalVisible}
                 onClose={() => {setModalVisible(false)}}
