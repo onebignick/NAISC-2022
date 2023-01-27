@@ -37,6 +37,7 @@ cur.execute('''
 cur.execute('''
     CREATE TABLE IF NOT EXISTS Comments(
         comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        content TEXT,
         article_id INTEGER,
         FOREIGN KEY (article_id) REFERENCES Articles(article_id)
     )

@@ -213,6 +213,7 @@ def getFc():
     conn.close()
     return jsonify(result)
 
+# Update the votes of each article
 @app.route("/updateVotes", methods=['PATCH'])
 def updateVotes():
     conn = sqlite3.connect("database.db")
@@ -221,6 +222,17 @@ def updateVotes():
     result = cur.execute(sqlStatement, [request.json["num"], request.json["article_id"]]).fetchall()
     conn.close()
     return jsonify(result)
+
+# Add comments for articles
+@app.route("/comments", methods=['POST'])
+def comments():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    sqlStatement = '''INSERT INTO Comments(content, article_id) VALUES (?, ?)'''
+    cur.execute(sqlStatement, [request.json["comment"], request.json["article_id"]])
+    conn.commit()
+    conn.close()
+
 
 
 
