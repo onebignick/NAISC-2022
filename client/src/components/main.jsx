@@ -67,7 +67,11 @@ function ListItem({article, handleLink}) {
     let num=(article['score']*1-article['otherscore']*1).toFixed(2)
     console.log(num)
     return (
+<<<<<<< Updated upstream
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
+=======
+        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70', marginBottom:"1em"}} raised={false}>
+>>>>>>> Stashed changes
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
                     onClick={()=>{handleLink(article)}}>
                         <CardMedia
