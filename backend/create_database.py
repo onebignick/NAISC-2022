@@ -28,7 +28,7 @@ cur.execute('''
         article_author_id INTEGER,
         article_title_score DOUBLE,
         article_description_score DOUBLE,
-        article_votes INTEGER,
+        article_votes INTEGER DEFAULT 0,
         FOREIGN KEY (article_source_id) REFERENCES Sources(source_id),
         FOREIGN KEY (article_author_id) REFERENCES Authors(author_id)
     )

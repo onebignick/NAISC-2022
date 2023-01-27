@@ -23,7 +23,7 @@ function shortenString(description) {
         words = description
     }
     return words
-}
+};
 const styles = {
     maincontainer : {
         width:"100%",
@@ -44,7 +44,23 @@ const styles = {
         paddingTop:"5em",
         backgroundColor:'white'
     }
-}
+};
+function updateVotes(index, num) {
+    axios({
+        url: "http://localhost:8000/updateVotes",
+        method: "patch",
+        data: {
+            article_id: index,
+            num: num
+        },
+    })
+    .then(res => {
+        console.log(res.data);
+    })
+    .catch(err => {
+        console.log(err.message);
+    });
+};
 function ListItem({article, handleLink}) {
     
     
@@ -77,8 +93,8 @@ function ListItem({article, handleLink}) {
                             gap: '2rem',
                             margin: '0 1rem',
                         }}>
-                            <ThumbUpRoundedIcon />
-                            <ThumbDownAltRoundedIcon />
+                            <ThumbUpRoundedIcon onClick={(e) => updateVotes(article.index, 1)} />
+                            <ThumbDownAltRoundedIcon onClick={() => updateVotes(article.index, -1)} />
                             <MessageRoundedIcon />
                         </Box>
                         <div className={num>0?"positive":"negative"}>{num}</div>
@@ -93,7 +109,7 @@ function Articles({articles, handleLink}){
     if (articles !== []) {
         return (
             <Box>
-                {articles.map(article => ( <ListItem article={article} handleLink={handleLink} />)
+                {articles.map(article => ( <ListItem key={article.index} article={article} handleLink={handleLink} />)
                   )}
                
             </Box>

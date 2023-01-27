@@ -213,6 +213,14 @@ def getFc():
     conn.close()
     return jsonify(result)
 
+@app.route("/updateVotes", methods=['PATCH'])
+def updateVotes():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+    sqlStatement = '''UPDATE Articles SET article_votes = article_votes + ? WHERE article_id = ?'''
+    result = cur.execute(sqlStatement, [request.json["num"], request.json["article_id"]]).fetchall()
+    conn.close()
+    return jsonify(result)
 
 
 
