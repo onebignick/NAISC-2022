@@ -199,6 +199,18 @@ def getLatest():
     conn.close()
     return jsonify(result)
 
+@app.route('/votes/', methods=['GET', 'POST'])
+def votes():
+    if request.method == 'POST':
+        id = request.args.get('id')
+        conn = sqlite3.connect("database.db")
+        cur = conn.cursor()
+        result = cur.execute('''SELECT article_votes FROM Articles WHERE article_id={}'''.format(id))
+        conn.close()
+        results = [arraytodict(i) for i in result]
+        print(results)
+        return results
+
 @app.route('/sourceInfo')
 def sourceInfo():
     conn = sqlite3.connect("database.db")
