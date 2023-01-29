@@ -139,7 +139,7 @@ export default function Main() {
                 });
                 let itemCount = tempArray.length
                 let scoreSum = tempArray.reduce((sum, currentValue) => sum + currentValue, 0)
-                setGraphContent(scoreSum/ itemCount)
+                setGraphContent((scoreSum/ itemCount).toFixed(2))
             }
         )
     },[])
@@ -166,7 +166,7 @@ export default function Main() {
             <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
             onKeyDown={handleKeypress} style={styles.input}/>
-            <p>{graphContent}</p>
+            <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p>
             <Articles articles={articles} handleLink={handleLink}/>
             
                     <Modal
