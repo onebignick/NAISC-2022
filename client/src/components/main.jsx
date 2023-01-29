@@ -46,6 +46,7 @@ const styles = {
         backgroundColor:'white'
     }
 };
+
 function updateVotes(index, num) {
     axios({
         url: "http://localhost:8000/updateVotes",
@@ -63,8 +64,6 @@ function updateVotes(index, num) {
     });
 };
 function ListItem({article, handleLink}) {
-    
-    
     let num=(article['score']*1-article['otherscore']*1).toFixed(2)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
@@ -82,23 +81,24 @@ function ListItem({article, handleLink}) {
                             {article['title']}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {shortenString(article['description'])}
-                            
+                            {shortenString(article['description'])}             
                         </Typography>
                         
                         </CardContent>
-                        <Box sx={{
+                    </CardActionArea>
+                    <Box sx={{
                             display: 'flex',
-                            flexDirection: 'column',
+                            flexDirection: 'row',
+                            justifyContent: "space-between",
                             gap: '2rem',
                             margin: '0 1rem',
                         }}>
                             <ThumbUpRoundedIcon onClick={(e) => updateVotes(article.index, 1)} />
+                            <div>{article['votes']}</div>
                             <ThumbDownAltRoundedIcon onClick={() => updateVotes(article.index, -1)} />
                             <MessageRoundedIcon />
+                            <div className={num>0?"positive":"negative"}>{num}</div>
                         </Box>
-                        <div className={num>0?"positive":"negative"}>{num}</div>
-                    </CardActionArea>
                 </Card>
 
     )
@@ -125,14 +125,31 @@ export default function Main() {
     const [articles, setArticles] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
     const [modalContent, setModalContent] = useState({})
-
+    const [graphContent, setGraphContent] = useState(0) 
+    const [scoreRange, setScoreRange] = useState([0,0])
     //articles is array of objects
     // populate date on mount 
     useEffect(()=> {
         //axios call here
         axios("http://localhost:8000/articles").then(
             res => {
+                console.log(res.data)
                 setArticles(res.data)
+                let highScore = -1000.0
+                let lowScore = 1000.0
+                let tempArray = res.data.map((item) => {
+                    if (item.score > highScore) {
+                        highScore = item.score
+                    }
+                    if (item.score < lowScore) {
+                        lowScore = item.score
+                    }
+                    return item.score
+                });
+                let itemCount = tempArray.length
+                let scoreSum = tempArray.reduce((sum, currentValue) => sum + currentValue, 0)
+                setGraphContent((scoreSum/ itemCount).toFixed(2))
+                setScoreRange([lowScore,highScore])
             }
         )
     },[])
@@ -159,10 +176,10 @@ export default function Main() {
             <div className='TopBox'>
                 <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
-            onKeyDown={handleKeypress} className='input'/>
+            onKeyDown={handleKeypress}  className='input'/>
             <img className='truth' src={TruthLogo}/>
             </div>
-            <p>graph here</p>
+            <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p>
             <Articles articles={articles} handleLink={handleLink}/>
             
                     <Modal
