@@ -1,4 +1,3 @@
-import Desktop from './components/desktop';
 import Main from './components/main'
 import {
   createBrowserRouter,
