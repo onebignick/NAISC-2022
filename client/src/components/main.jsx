@@ -131,7 +131,6 @@ export default function Main() {
         //axios call here
         axios("http://localhost:8000/articles").then(
             res => {
-                console.log(res.data)
                 setArticles(res.data)
             }
         )
