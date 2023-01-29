@@ -134,7 +134,7 @@ export default function Main() {
             res => {
                 setArticles(res.data)
                 let tempArray = res.data.map((item) => {
-                    item.score
+                    return item.score
                 });
                 let itemCount = tempArray.length
                 let scoreSum = tempArray.reduce((sum, currentValue) => sum + currentValue, 0)
