@@ -124,6 +124,7 @@ export default function Main() {
     const [articles, setArticles] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
     const [modalContent, setModalContent] = useState({})
+    const [graphContent, setGraphContent] = useState(0) 
 
     //articles is array of objects
     // populate date on mount 
@@ -132,6 +133,12 @@ export default function Main() {
         axios("http://localhost:8000/articles").then(
             res => {
                 setArticles(res.data)
+                let tempArray = res.data.map((item) => {
+                    item.score
+                });
+                let itemCount = tempArray.length
+                let scoreSum = tempArray.reduce((sum, currentValue) => sum + currentValue, 0)
+                setGraphContent(scoreSum/ itemCount)
             }
         )
     },[])
@@ -158,7 +165,7 @@ export default function Main() {
             <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
             onKeyDown={handleKeypress} style={styles.input}/>
-            <p>graph here</p>
+            <p>{graphContent}</p>
             <Articles articles={articles} handleLink={handleLink}/>
             
                     <Modal
