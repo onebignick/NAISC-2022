@@ -45,6 +45,7 @@ const styles = {
         backgroundColor:'white'
     }
 };
+
 function updateVotes(index, num) {
     axios({
         url: "http://localhost:8000/updateVotes",
@@ -62,8 +63,6 @@ function updateVotes(index, num) {
     });
 };
 function ListItem({article, handleLink}) {
-    
-    
     let num=(article['score']*1-article['otherscore']*1).toFixed(2)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
@@ -81,23 +80,24 @@ function ListItem({article, handleLink}) {
                             {article['title']}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {shortenString(article['description'])}
-                            
+                            {shortenString(article['description'])}             
                         </Typography>
                         
                         </CardContent>
-                        <Box sx={{
+                    </CardActionArea>
+                    <Box sx={{
                             display: 'flex',
-                            flexDirection: 'column',
+                            flexDirection: 'row',
+                            justifyContent: "space-between",
                             gap: '2rem',
                             margin: '0 1rem',
                         }}>
                             <ThumbUpRoundedIcon onClick={(e) => updateVotes(article.index, 1)} />
+                            <div>{article['votes']}</div>
                             <ThumbDownAltRoundedIcon onClick={() => updateVotes(article.index, -1)} />
                             <MessageRoundedIcon />
+                            <div className={num>0?"positive":"negative"}>{num}</div>
                         </Box>
-                        <div className={num>0?"positive":"negative"}>{num}</div>
-                    </CardActionArea>
                 </Card>
 
     )
@@ -131,6 +131,7 @@ export default function Main() {
         //axios call here
         axios("http://localhost:8000/articles").then(
             res => {
+                console.log(res.data)
                 setArticles(res.data)
             }
         )

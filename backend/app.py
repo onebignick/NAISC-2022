@@ -140,21 +140,21 @@ def getnews():
             print('|')
             # Adding of article into db
             cur.execute('''
-                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_title_score, article_description_score, article_source_id, article_author_id) 
-                VALUES  (?,?,?,?,?,?,?,?,?,?)
-            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'][:10], data['articles'][i]['content'], score[0], score[1], source_id, author_id))
+                INSERT INTO Articles(article_title, article_description, article_url, article_url_to_image, article_date_published, article_content, article_title_score, article_description_score, article_votes, article_source_id, article_author_id) 
+                VALUES  (?,?,?,?,?,?,?,?,?,?,?)
+            ''', (data['articles'][i]['title'], data['articles'][i]['description'], data['articles'][i]['url'], data['articles'][i]['urlToImage'], data['articles'][i]['publishedAt'][:10], data['articles'][i]['content'], score[0], score[1], 0, source_id, author_id))
 
             conn.commit()
             #print("article added")
     conn.close()
 
 def arraytodict(article : list):
-    if len(article) != 11:
+    if len(article) != 12:
         print('input is missing fields', article)
         return {}
     else:
-        labels = ['index','title', 'description', 'url', 'imageurl','date', 'content', 'sourceid', 'authorid', 'score', 'otherscore']
-        results = {labels[i] : article[i] for i in range(11)}
+        labels = ['index','title', 'description', 'url', 'imageurl','date', 'content', 'sourceid', 'authorid', 'score', 'otherscore', 'votes']
+        results = {labels[i] : article[i] for i in range(len(labels))}
         return results 
 
 
@@ -163,7 +163,6 @@ def articles():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     result = cur.execute('''SELECT * FROM Articles''').fetchall()
-    
     conn.close()
     results = [arraytodict(i) for i in result]
     return jsonify(results)
@@ -172,7 +171,6 @@ def articles():
 def search():
     if request.method == 'GET':
         searchTerm = request.args.get('search')
-        print(searchTerm)
         conn = sqlite3.connect("database.db")
         cur = conn.cursor()
         result = cur.execute("""SELECT * FROM Articles WHERE article_title LIKE '%{}%'""".format(searchTerm)).fetchall()
@@ -199,44 +197,6 @@ def getLatest():
     conn.close()
     return jsonify(result)
 
-@app.route('/votes/', methods=['GET', 'POST'])
-def votes():
-    if request.method == 'POST':
-        id = request.args.get('id')
-        conn = sqlite3.connect("database.db")
-        cur = conn.cursor()
-        result = cur.execute('''SELECT article_votes FROM Articles WHERE article_id={}'''.format(id))
-        conn.close()
-        results = [arraytodict(i) for i in result]
-        print(results)
-        return results
-
-@app.route('/sourceInfo')
-def sourceInfo():
-    conn = sqlite3.connect("database.db")
-    cur = conn.cursor()
-    result = cur.execute('''SELECT S.source_id, S.source_name, group_concat(A.article_score, ",") FROM Sources AS S JOIN Articles AS A ON S.source_id = A.article_source_id''').fetchall()
-    conn.close()
-    return jsonify(result)
-
-@app.route('/getLg/<source>/<date>',methods=['GET'])
-def getLg(source, date):    
-    conn = sqlite3.connect("database.db")
-    cur = conn.cursor()
-    sqlStatement='''SELECT group_concat(A.article_score, ","), A.article_date_published FROM Articles AS A JOIN Sources AS S ON A.article_source_id = S.source_id WHERE A.article_date_published = ? AND S.source_name = ?'''
-    result = cur.execute(sqlStatement,[date, source]).fetchall()
-    conn.close()
-    return jsonify(result)
-
-@app.route('/getFc',methods=['GET'])
-def getFc():
-    conn = sqlite3.connect("database.db")
-    cur = conn.cursor()
-    sqlStatement='''SELECT S.source_id, S.source_name, group_concat(A.article_score, ",") FROM Sources AS S JOIN Articles AS A ON S.source_id = A.article_source_id WHERE A.article_date_published = DATE() '''
-    result = cur.execute(sqlStatement).fetchall()
-    conn.close()
-    return jsonify(result)
-
 # Update the votes of each article
 @app.route("/updateVotes", methods=['PATCH'])
 def updateVotes():
@@ -244,6 +204,7 @@ def updateVotes():
     cur = conn.cursor()
     sqlStatement = '''UPDATE Articles SET article_votes = article_votes + ? WHERE article_id = ?'''
     result = cur.execute(sqlStatement, [request.json["num"], request.json["article_id"]]).fetchall()
+    conn.commit()
     conn.close()
     return jsonify(result)
 
@@ -256,13 +217,6 @@ def comments():
     cur.execute(sqlStatement, [request.json["comment"], request.json["article_id"]])
     conn.commit()
     conn.close()
-
-
-
-
-
-
-
 
 def updater():
     while True:
