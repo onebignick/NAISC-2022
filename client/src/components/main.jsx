@@ -12,7 +12,8 @@ import { CardActionArea } from '@mui/material';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
-import './styles/main.scss'
+import './styles/main.css'
+import TruthLogo from './media/truth.jpg'
 
 function shortenString(description) {
     let words = ''
@@ -154,10 +155,13 @@ export default function Main() {
 
     }   
     return (
-        <Box style={styles.maincontainer}>
-            <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
+        <Box style={styles.maincontainer} className='BigBox'>
+            <div className='TopBox'>
+                <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
-            onKeyDown={handleKeypress} style={styles.input}/>
+            onKeyDown={handleKeypress} className='input'/>
+            <img className='truth' src={TruthLogo}/>
+            </div>
             <p>graph here</p>
             <Articles articles={articles} handleLink={handleLink}/>
             
