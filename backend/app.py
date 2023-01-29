@@ -168,6 +168,18 @@ def articles():
     results = [arraytodict(i) for i in result]
     return jsonify(results)
 
+@app.route('/search/', methods=['GET'])
+def search():
+    if request.method == 'GET':
+        searchTerm = request.args.get('search')
+        print(searchTerm)
+        conn = sqlite3.connect("database.db")
+        cur = conn.cursor()
+        result = cur.execute("""SELECT * FROM Articles WHERE article_title LIKE '%{}%'""".format(searchTerm)).fetchall()
+        conn.close()
+        results = [arraytodict(i) for i in result]
+        return results
+
 @app.route('/sources')
 def sources():
     conn = sqlite3.connect("database.db")

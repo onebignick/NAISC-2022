@@ -65,7 +65,6 @@ function ListItem({article, handleLink}) {
     
     
     let num=(article['score']*1-article['otherscore']*1).toFixed(2)
-    console.log(num)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
@@ -125,6 +124,7 @@ export default function Main() {
     const [articles, setArticles] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
     const [modalContent, setModalContent] = useState({})
+
     //articles is array of objects
     // populate date on mount 
     useEffect(()=> {
@@ -136,14 +136,16 @@ export default function Main() {
             }
         )
     },[])
+
     const handleLink = (article) => {
         setModalContent(article)
         setModalVisible(true)
     }
+
     const handleKeypress = (e) => {
         if (e.key === "Enter") {
             // retrieve data from database (filter)
-            axios.get("http://localhost:8000/articles", {params :{search : searchTerm}}).then(
+            axios.get("http://localhost:8000/search/", {params :{search : searchTerm}, headers: {'Access-Control-Allow-Origin': '*', 'X-Requested-With': 'XMLHttpRequest'},}).then(
                 res => {
                     setArticles(res.data)
                     setSearchTerm('')
