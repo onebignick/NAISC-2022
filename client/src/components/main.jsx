@@ -134,12 +134,21 @@ export default function Main() {
             res => {
                 console.log(res.data)
                 setArticles(res.data)
+                let highScore = -1000.0
+                let lowScore = 1000.0
                 let tempArray = res.data.map((item) => {
+                    if (item.score > highScore) {
+                        highScore = item.score
+                    }
+                    if (item.score < lowScore) {
+                        lowScore = item.score
+                    }
                     return item.score
                 });
                 let itemCount = tempArray.length
                 let scoreSum = tempArray.reduce((sum, currentValue) => sum + currentValue, 0)
                 setGraphContent((scoreSum/ itemCount).toFixed(2))
+                setScoreRange([lowScore,highScore])
             }
         )
     },[])
