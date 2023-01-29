@@ -176,7 +176,7 @@ def search():
         result = cur.execute("""SELECT * FROM Articles WHERE article_title LIKE '%{}%'""".format(searchTerm)).fetchall()
         conn.close()
         results = [arraytodict(i) for i in result]
-        return results
+        return jsonify(results)
 
 @app.route('/sources')
 def sources():

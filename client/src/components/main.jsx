@@ -125,7 +125,7 @@ export default function Main() {
     const [modalVisible, setModalVisible] = useState(false)
     const [modalContent, setModalContent] = useState({})
     const [graphContent, setGraphContent] = useState(0) 
-
+    const [scoreRange, setScoreRange] = useState([0,0])
     //articles is array of objects
     // populate date on mount 
     useEffect(()=> {
