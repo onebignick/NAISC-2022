@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
@@ -63,9 +62,9 @@ function updateVotes(index, num) {
     });
 };
 function ListItem({article, handleLink}) {
-    let num=(article['score']*1-article['otherscore']*1).toFixed(2)
+    let num=((article['score']*1+article['otherscore']*1)/2).toFixed(2)
     return (
-        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : article['score'] < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
+        <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : num < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
                     <CardActionArea sx={{display:'flex', padding:'1em', justifyContent:"space-between"}}
                     onClick={()=>{handleLink(article)}}>
                         <CardMedia
@@ -96,7 +95,7 @@ function ListItem({article, handleLink}) {
                             <div>{article['votes']}</div>
                             <ThumbDownAltRoundedIcon onClick={() => updateVotes(article.index, -1)} />
                             <MessageRoundedIcon />
-                            <div className={num>0?"positive":"negative"}>{num}</div>
+                            <div className={num>=0?"positive":"negative"}>{num}</div>
                         </Box>
                 </Card>
 
