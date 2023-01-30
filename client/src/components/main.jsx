@@ -43,6 +43,9 @@ const styles = {
         alignItems:'center',
         paddingTop:"5em",
         backgroundColor:'white'
+    },
+    comments:{
+        padding:'2em'
     }
 };
 
@@ -126,6 +129,7 @@ export default function Main() {
     const [modalContent, setModalContent] = useState({})
     const [graphContent, setGraphContent] = useState(0) 
     const [scoreRange, setScoreRange] = useState([0,0])
+    const [commentsVisible, setCommentsVisible] = useState(false)
     //articles is array of objects
     // populate date on mount 
     useEffect(()=> {
@@ -152,11 +156,26 @@ export default function Main() {
             }
         )
     },[])
-
+    const openComments = () => {
+        setCommentsVisible(true)
+        // get request
+    }
     const handleLink = (article) => {
         setModalContent(article)
         setModalVisible(true)
     }
+    const handleKeypressComments = (e) => {
+        if (e.key === "Enter") {
+            // retrieve data from database (filter)
+            axios.post("http://localhost:8000/comments/", {comment: commentInput}
+             ).then(
+                openComments() //refresh page
+ 
+            )
+        }
+
+    }       
+
 
     const handleKeypress = (e) => {
         if (e.key === "Enter") {
@@ -205,6 +224,26 @@ export default function Main() {
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                     {modalContent['content']}
                 </Typography>
+                </Box>
+            </Modal>
+
+            <Modal
+                open={commentsVisible}
+                onClose={() => {setCommentsVisible(false)}}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={styles.modal}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Comments
+                </Typography>
+                {comments.map(item =>
+                    <Typography id="modal-modal-description" sx={{...styles.comment,  mt: 2 }}>
+                    {item}
+                </Typography> )}
+                <TextField id="outlined-basic" label="Comment" variant="outlined" 
+                    value={commentInput} onChange={(e) => {setCommentInput(e.target.value)}} 
+                    onKeyDown={handleKeypressComments}  className='input'/>
                 </Box>
             </Modal>
         </Box>
