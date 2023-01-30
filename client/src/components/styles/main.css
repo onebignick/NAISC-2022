@@ -1,0 +1,37 @@
+.negative{
+    color:red;
+    font-size: large;
+}
+
+.positive{
+    color:green;
+    font-size: large;
+}
+
+.card{
+    margin-bottom: 3%;
+}
+
+.BigBox{
+    background: linear-gradient(#A1C4FD , #C2E9FB);
+}
+
+.truth{
+    margin-left: 30%;
+    height:10%;
+    width:10%;
+}
+
+.TopBox{
+    width:80%;
+    display:flex;
+    padding-left: 47%;
+    
+
+}
+
+.input{
+    width:40%;
+    
+
+}

@@ -11,7 +11,8 @@ import { CardActionArea } from '@mui/material';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
-import './styles/main.scss'
+import './styles/main.css'
+import TruthLogo from './media/truth.jpg'
 
 function shortenString(description) {
     let words = ''
@@ -124,7 +125,7 @@ export default function Main() {
     const [modalVisible, setModalVisible] = useState(false)
     const [modalContent, setModalContent] = useState({})
     const [graphContent, setGraphContent] = useState(0) 
-
+    const [scoreRange, setScoreRange] = useState([0,0])
     //articles is array of objects
     // populate date on mount 
     useEffect(()=> {
@@ -133,12 +134,21 @@ export default function Main() {
             res => {
                 console.log(res.data)
                 setArticles(res.data)
+                let highScore = -1000.0
+                let lowScore = 1000.0
                 let tempArray = res.data.map((item) => {
+                    if (item.score > highScore) {
+                        highScore = item.score
+                    }
+                    if (item.score < lowScore) {
+                        lowScore = item.score
+                    }
                     return item.score
                 });
                 let itemCount = tempArray.length
                 let scoreSum = tempArray.reduce((sum, currentValue) => sum + currentValue, 0)
-                setGraphContent(scoreSum/ itemCount)
+                setGraphContent((scoreSum/ itemCount).toFixed(2))
+                setScoreRange([lowScore,highScore])
             }
         )
     },[])
@@ -161,11 +171,14 @@ export default function Main() {
 
     }   
     return (
-        <Box style={styles.maincontainer}>
-            <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
+        <Box style={styles.maincontainer} className='BigBox'>
+            <div className='TopBox'>
+                <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
-            onKeyDown={handleKeypress} style={styles.input}/>
-            <p>{graphContent}</p>
+            onKeyDown={handleKeypress}  className='input'/>
+            <img className='truth' src={TruthLogo}/>
+            </div>
+            <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p>
             <Articles articles={articles} handleLink={handleLink}/>
             
                     <Modal
