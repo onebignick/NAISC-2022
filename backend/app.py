@@ -219,6 +219,18 @@ def comments():
     conn.commit()
     conn.close()
 
+# Get comments for articles
+@app.route("/getComments", methods=['GET'])
+def getComment():
+        articleID = request.args.get('article_id')
+        conn = sqlite3.connect("database.db")
+        cur = conn.cursor()
+        result = cur.execute("""SELECT * FROM Comments WHERE article_id = '%{}%'""".format(articleID)).fetchall()
+        conn.close()
+        results = [arraytodict(i) for i in result]
+        print(results)
+        return jsonify(results)
+
 def updater():
     while True:
         getnews()
