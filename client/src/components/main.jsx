@@ -65,7 +65,7 @@ function updateVotes(index, num) {
         console.log(err.message);
     });
 };
-function ListItem({article, handleLink}) {
+function ListItem({article, handleLink, getComments}) {
     let num=((article['score']*1+article['otherscore']*1)/2).toFixed(2)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : num < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
@@ -98,20 +98,20 @@ function ListItem({article, handleLink}) {
                             <ThumbUpRoundedIcon onClick={(e) => updateVotes(article.index, 1)} />
                             <div>{article['votes']}</div>
                             <ThumbDownAltRoundedIcon onClick={() => updateVotes(article.index, -1)} />
-                            <MessageRoundedIcon />
+                            <MessageRoundedIcon onClick={() => getComments(article.index)}/>
                             <div className={num>=0?"positive":"negative"}>{num}</div>
                         </Box>
                 </Card>
 
     )
 }
-function Articles({articles, handleLink}){
+function Articles({articles, handleLink, getComments}){
     useEffect(()=>{},[articles])
 
     if (articles !== []) {
         return (
             <Box>
-                {articles.map(article => ( <ListItem key={article.index} article={article} handleLink={handleLink} />)
+                {articles.map(article => ( <ListItem key={article.index} article={article} handleLink={handleLink} getComments={getComments} />)
                   )}
                
             </Box>
@@ -129,7 +129,9 @@ export default function Main() {
     const [modalContent, setModalContent] = useState({})
     const [graphContent, setGraphContent] = useState(0) 
     const [scoreRange, setScoreRange] = useState([0,0])
+    const [commentInput, setCommentInput] = useState("")
     const [commentsVisible, setCommentsVisible] = useState(false)
+    const [comments,setcomments] = useState([])
     //articles is array of objects
     // populate date on mount 
     useEffect(()=> {
@@ -168,15 +170,27 @@ export default function Main() {
         if (e.key === "Enter") {
             // retrieve data from database (filter)
             axios.post("http://localhost:8000/comments/", {comment: commentInput}
-             ).then(
-                openComments() //refresh page
+             ).then( res => {
+                setcomments(res.data)
+                openComments()
+             }
+                 //refresh page
  
             )
-        }
+        } // post comments (need new route)
 
     }       
 
-
+    const getComments = (id) => {
+        axios.get("http://localhost:8000/getComments",
+         {params :{article_id : id}, headers: {'Access-Control-Allow-Origin': '*', 
+         'X-Requested-With': 'XMLHttpRequest'},}).then(
+            res => {
+                setcomments(res.data)
+                openComments()
+            }
+         )
+    }
     const handleKeypress = (e) => {
         if (e.key === "Enter") {
             // retrieve data from database (filter)
@@ -198,7 +212,7 @@ export default function Main() {
             <img className='truth' src={TruthLogo}/>
             </div>
             <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p>
-            <Articles articles={articles} handleLink={handleLink}/>
+            <Articles articles={articles} handleLink={handleLink} getComments = {getComments}/>
             
                     <Modal
                 open={modalVisible}
