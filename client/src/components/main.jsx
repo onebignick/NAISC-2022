@@ -165,6 +165,9 @@ export default function Main() {
         //axios call here
         refreshArticles()
     },[])
+
+    useEffect(()=>getComments(currentArticle), []);
+
     const openComments = () => {
         setCommentsVisible(true)
         // get request
@@ -179,7 +182,7 @@ export default function Main() {
             axios.post("http://localhost:8000/comments", {comment: commentInput, article_id:currentArticle}
              ).then(
                 () => {
-                    getComments(currentArticle )
+                    getComments(currentArticle)
                 }
              )
         } // post comments (need new route)
@@ -191,12 +194,14 @@ export default function Main() {
          {params :{article_id : id}, headers: {'Access-Control-Allow-Origin': '*', 
          'X-Requested-With': 'XMLHttpRequest'},}).then(
             res => {
+                console.log(res.data)
                 setcomments(res.data)
                 openComments()
                 setCurrentArticle(id)
             }
          )
     }
+
     const handleKeypress = (e) => {
         if (e.key === "Enter") {
             // retrieve data from database (filter)
@@ -211,6 +216,7 @@ export default function Main() {
     }   
     return (
         <Box style={styles.maincontainer} className='BigBox'>
+            <h1>News.ai</h1>
             <div className='TopBox'>
                 <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
@@ -260,7 +266,7 @@ export default function Main() {
                 </Typography>
                 {comments.map(item =>
                     <Typography id="modal-modal-description" sx={{...styles.comment,  mt: 2 }}>
-                    {item}
+                    {item['comment']}
                 </Typography> )}
                 <TextField id="outlined-basic" label="Comment" variant="outlined" 
                     value={commentInput} onChange={(e) => {setCommentInput(e.target.value)}} 
@@ -268,7 +274,5 @@ export default function Main() {
                 </Box>
             </Modal>
         </Box>
-        
-
     )
 } 

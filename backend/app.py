@@ -155,6 +155,16 @@ def arraytodict(article : list):
     else:
         labels = ['index','title', 'description', 'url', 'imageurl','date', 'content', 'sourceid', 'authorid', 'score', 'otherscore', 'votes']
         results = {labels[i] : article[i] for i in range(len(labels))}
+        return results
+
+
+def commenttodict(comment : list):
+    if len(comment) != 3:
+        print('input is missing fields', comment)
+        return {}
+    else:
+        labels = ['commentid', 'comment', 'articleid']
+        results = {labels[i] : comment[i] for i in range(len(labels))}
         return results 
 
 
@@ -225,11 +235,12 @@ def getComment():
         articleID = request.args.get('article_id')
         conn = sqlite3.connect("database.db")
         cur = conn.cursor()
-        result = cur.execute("""SELECT * FROM Comments WHERE article_id = '%{}%'""".format(articleID)).fetchall()
+        result = cur.execute("""SELECT * FROM Comments WHERE article_id = ?""", [articleID]).fetchall()
         conn.close()
-        results = [arraytodict(i) for i in result]
-        print(results)
-        return jsonify(results)
+        results = [commenttodict(i) for i in result]
+        response = jsonify(results)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 def updater():
     while True:
