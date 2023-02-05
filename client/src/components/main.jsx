@@ -171,7 +171,7 @@ export default function Main() {
     const handleKeypressComments = (e) => {
         if (e.key === "Enter") {
             // retrieve data from database (filter)
-            axios.post("http://localhost:8000/comments/", {comment: commentInput, article_id:currentArticle}
+            axios.post("http://localhost:8000/comments", {comment: commentInput, article_id:currentArticle}
              ).then(
                 () => {
                     getComments(currentArticle )
