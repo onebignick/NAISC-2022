@@ -66,7 +66,7 @@ function updateVotes(index, num) {
         // console.log(err.message);
     });
 };
-function ListItem({article, handleLink, getComments, setCurrentArticle}) {
+function ListItem({article, handleLink, getComments, refreshArticles}) {
     let num=((article['score']*1+article['otherscore']*1)/2).toFixed(2)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : num < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
@@ -96,9 +96,9 @@ function ListItem({article, handleLink, getComments, setCurrentArticle}) {
                             gap: '2rem',
                             margin: '0 1rem',
                         }}>
-                            <ThumbUpRoundedIcon onClick={(e) => updateVotes(article.index, 1)} />
+                            <ThumbUpRoundedIcon onClick={(e) => {updateVotes(article.index, 1); refreshArticles() }} />
                             <div>{article['votes']}</div>
-                            <ThumbDownAltRoundedIcon onClick={() => updateVotes(article.index, -1)} />
+                            <ThumbDownAltRoundedIcon onClick={() => {updateVotes(article.index, -1); refreshArticles()}} />
                             <MessageRoundedIcon onClick={() => getComments(article.index)}/>
                             <div className={num>=0?"positive":"negative"}>{num}</div>
                         </Box>
@@ -106,13 +106,13 @@ function ListItem({article, handleLink, getComments, setCurrentArticle}) {
 
     )
 }
-function Articles({articles, handleLink, getComments, setCurrentArticle}){
+function Articles({articles, handleLink, getComments, refreshArticles}){
     useEffect(()=>{},[articles])
 
     if (articles !== []) {
         return (
             <Box>
-                {articles.map(article => ( <ListItem key={article.index} article={article} handleLink={handleLink} getComments={getComments} setCurrentArticle={setCurrentArticle} />)
+                {articles.map(article => ( <ListItem key={article.index} article={article} handleLink={handleLink} getComments={getComments} refreshArticles={refreshArticles} />)
                   )}
                
             </Box>
@@ -136,8 +136,7 @@ export default function Main() {
     const [currentArticle, setCurrentArticle] = useState('')
     //articles is array of objects
     // populate date on mount 
-    useEffect(()=> {
-        //axios call here
+    const refreshArticles = () => {
         axios("http://localhost:8000/articles").then(
             res => {
                 // console.log(res.data)
@@ -159,6 +158,12 @@ export default function Main() {
                 setScoreRange([lowScore,highScore])
             }
         )
+    }
+
+
+    useEffect(()=> {
+        //axios call here
+        refreshArticles()
     },[])
     const openComments = () => {
         setCommentsVisible(true)
@@ -214,7 +219,8 @@ export default function Main() {
             </div>
             {/* <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p> */}
             {articles && <Chart data={articles} />}
-            <Articles articles={articles} handleLink={handleLink} getComments = {getComments} setCurrentArticle = {setCurrentArticle} />
+            <Articles articles={articles} handleLink={handleLink} 
+            getComments = {getComments} refreshArticles = {refreshArticles} />
             
                     <Modal
                 open={modalVisible}
