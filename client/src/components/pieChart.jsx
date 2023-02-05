@@ -15,13 +15,7 @@ export default function Chart(props) {
         if (props.data) {
             props.data.forEach(article => {
                 const score = (article.score + article.otherscore) / 2;
-                if (score === 0) {
-                    setData(prevData => {
-                        const newData = prevData;
-                        newData[0].count++;
-                        return newData;
-                    });
-                } else if (score > 0) {
+                if (score >= 0) {
                     setData(prevData => {
                         const newData = prevData;
                         newData[1].count++;
