@@ -5,9 +5,9 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 export default function Chart(props) {
     
     const [data, setData] = useState([
-        {name: "Neutral", score: 0, fill: "#187498"},
-        {name: "Positive", score: 0, fill: "#36AE7C"},
-        {name: "Negative", score: 0, fill: "#EB5353"}
+        {name: "Neutral", count: 0, fill: "#187498"},
+        {name: "Positive", count: 0, fill: "#36AE7C"},
+        {name: "Negative", count: 0, fill: "#EB5353"}
     ]);
     const [isReady, setIsReady] = useState(false);
 
@@ -18,19 +18,19 @@ export default function Chart(props) {
                 if (score === 0) {
                     setData(prevData => {
                         const newData = prevData;
-                        newData[0].score++;
+                        newData[0].count++;
                         return newData;
                     });
                 } else if (score > 0) {
                     setData(prevData => {
                         const newData = prevData;
-                        newData[1].score++;
+                        newData[1].count++;
                         return newData;
                     });
                 } else {
                     setData(prevData => {
                         const newData = prevData;
-                        newData[2].score++;
+                        newData[2].count++;
                         return newData;
                     });
                 }
@@ -48,7 +48,7 @@ export default function Chart(props) {
             <div style={{textAlign: "center"}}>
             <h3>Overview of news sentiment</h3>
                 <PieChart width={350} height={350}>
-                    <Pie data={data} dataKey="score" cx="50%" cy="50%" fill="fill" />
+                    <Pie data={data} dataKey="count" cx="50%" cy="50%" fill="fill" />
                     <Tooltip />
                 </PieChart>
             </div> : <HourglassEmptyIcon size={100} />}
