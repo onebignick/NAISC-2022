@@ -12,8 +12,7 @@ import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import './styles/main.css'
-import TruthLogo from './media/truth.jpg'
-import Chart from "./pieChart";
+import Chart from "./pieChart.jsx";
 
 function shortenString(description) {
     let words = ''
@@ -93,6 +92,7 @@ function ListItem({article, handleLink, getComments, setCurrentArticle}) {
                             display: 'flex',
                             flexDirection: 'row',
                             justifyContent: "space-between",
+                            padding: "15px 0px",
                             gap: '2rem',
                             margin: '0 1rem',
                         }}>
@@ -210,7 +210,6 @@ export default function Main() {
                 <TextField id="outlined-basic" label="Search Articles" variant="outlined" 
             value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} 
             onKeyDown={handleKeypress}  className='input'/>
-            <img className='truth' src={TruthLogo}/>
             </div>
             {/* <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p> */}
             {articles && <Chart data={articles} />}
