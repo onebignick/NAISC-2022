@@ -165,9 +165,8 @@ export default function Main() {
         //axios call here
         refreshArticles()
     },[])
-
-    useEffect(()=>getComments(currentArticle), []);
-
+    
+    useEffect(()=>{}, [comments])
     const openComments = () => {
         setCommentsVisible(true)
         // get request
@@ -186,7 +185,6 @@ export default function Main() {
                     getComments(currentArticle)
                 }
              )
-             getComments(currentArticle)
         } // post comments (need new route)
 
     }       
