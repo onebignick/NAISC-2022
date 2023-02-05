@@ -66,7 +66,7 @@ function updateVotes(index, num) {
         // console.log(err.message);
     });
 };
-function ListItem({article, handleLink, getComments}) {
+function ListItem({article, handleLink, getComments, setCurrentArticle}) {
     let num=((article['score']*1+article['otherscore']*1)/2).toFixed(2)
     return (
         <Card sx={{ width: 500, borderRadius:'0.5em', borderRight : num < 0 ? '1em solid #ff5d52': '1em solid #66ff70'}} raised={false} className="card">
@@ -106,13 +106,13 @@ function ListItem({article, handleLink, getComments}) {
 
     )
 }
-function Articles({articles, handleLink, getComments}){
+function Articles({articles, handleLink, getComments, setCurrentArticle}){
     useEffect(()=>{},[articles])
 
     if (articles !== []) {
         return (
             <Box>
-                {articles.map(article => ( <ListItem key={article.index} article={article} handleLink={handleLink} getComments={getComments} />)
+                {articles.map(article => ( <ListItem key={article.index} article={article} handleLink={handleLink} getComments={getComments} setCurrentArticle={setCurrentArticle} />)
                   )}
                
             </Box>
@@ -133,6 +133,7 @@ export default function Main() {
     const [commentInput, setCommentInput] = useState("")
     const [commentsVisible, setCommentsVisible] = useState(false)
     const [comments,setcomments] = useState([])
+    const [currentArticle, setCurrentArticle] = useState('')
     //articles is array of objects
     // populate date on mount 
     useEffect(()=> {
@@ -170,14 +171,12 @@ export default function Main() {
     const handleKeypressComments = (e) => {
         if (e.key === "Enter") {
             // retrieve data from database (filter)
-            axios.post("http://localhost:8000/comments/", {comment: commentInput}
-             ).then( res => {
-                setcomments(res.data)
-                openComments()
-             }
-                 //refresh page
- 
-            )
+            axios.post("http://localhost:8000/comments/", {comment: commentInput, article_id:currentArticle}
+             ).then(
+                () => {
+                    getComments(currentArticle )
+                }
+             )
         } // post comments (need new route)
 
     }       
@@ -189,6 +188,7 @@ export default function Main() {
             res => {
                 setcomments(res.data)
                 openComments()
+                setCurrentArticle(id)
             }
          )
     }
@@ -214,7 +214,7 @@ export default function Main() {
             </div>
             {/* <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p> */}
             {articles && <Chart data={articles} />}
-            <Articles articles={articles} handleLink={handleLink} getComments = {getComments}/>
+            <Articles articles={articles} handleLink={handleLink} getComments = {getComments} setCurrentArticle = {setCurrentArticle} />
             
                     <Modal
                 open={modalVisible}
