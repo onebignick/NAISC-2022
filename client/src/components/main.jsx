@@ -13,6 +13,7 @@ import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import './styles/main.css'
 import TruthLogo from './media/truth.jpg'
+import Chart from "./pieChart";
 
 function shortenString(description) {
     let words = ''
@@ -59,10 +60,10 @@ function updateVotes(index, num) {
         },
     })
     .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
     })
     .catch(err => {
-        console.log(err.message);
+        // console.log(err.message);
     });
 };
 function ListItem({article, handleLink, getComments}) {
@@ -138,7 +139,7 @@ export default function Main() {
         //axios call here
         axios("http://localhost:8000/articles").then(
             res => {
-                console.log(res.data)
+                // console.log(res.data)
                 setArticles(res.data)
                 let highScore = -1000.0
                 let lowScore = 1000.0
@@ -211,7 +212,8 @@ export default function Main() {
             onKeyDown={handleKeypress}  className='input'/>
             <img className='truth' src={TruthLogo}/>
             </div>
-            <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p>
+            {/* <p style={{color: graphContent>0 ? 'green' : 'red'}}>{graphContent}</p> */}
+            {articles && <Chart data={articles} />}
             <Articles articles={articles} handleLink={handleLink} getComments = {getComments}/>
             
                     <Modal
