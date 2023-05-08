@@ -165,9 +165,8 @@ export default function Main() {
         //axios call here
         refreshArticles()
     },[])
-
-    useEffect(()=>getComments(currentArticle), []);
-
+    
+    useEffect(()=>{}, [comments])
     const openComments = () => {
         setCommentsVisible(true)
         // get request
@@ -178,6 +177,7 @@ export default function Main() {
     }
     const handleKeypressComments = (e) => {
         if (e.key === "Enter") {
+            setCommentInput('')
             // retrieve data from database (filter)
             axios.post("http://localhost:8000/comments", {comment: commentInput, article_id:currentArticle}
              ).then(
@@ -269,7 +269,7 @@ export default function Main() {
                     {item['comment']}
                 </Typography> )}
                 <TextField id="outlined-basic" label="Comment" variant="outlined" 
-                    value={commentInput} onChange={(e) => {setCommentInput(e.target.value)}} 
+                    value={commentInput} onChange={(e) => setCommentInput(e.target.value)} 
                     onKeyDown={handleKeypressComments}  className='input'/>
                 </Box>
             </Modal>
